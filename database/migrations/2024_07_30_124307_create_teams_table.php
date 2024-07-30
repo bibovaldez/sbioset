@@ -14,10 +14,10 @@ return new class extends Migration
         // as poultry building
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users','id')->onDelete('cascade')->index();//admin
-            $table->string('name');
-            $table->string('address');
-            $table->string('description');
+            $table->foreignId('user_id')->constrained('users', 'id')->onDelete('cascade')->index(); //admin
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('description')->nullable();
             $table->boolean('personal_team');
             $table->timestamps();
         });
