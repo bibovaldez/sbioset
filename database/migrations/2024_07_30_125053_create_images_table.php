@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_user', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id');//admin
-            $table->foreignId('user_id');//user
-            $table->string('role')->nullable();//admin, member
+            $table->foreignId('user_id')->constrained('users', 'id')->onUpdate('cascade');
+            $table->foreignId('team_id');
+            $table->longText('encrypted_image');
+            $table->longText('recognition_result_encrypted');
             $table->timestamps();
-
-            $table->unique(['team_id', 'user_id']);
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_user');
+        Schema::dropIfExists('images');
     }
 };
