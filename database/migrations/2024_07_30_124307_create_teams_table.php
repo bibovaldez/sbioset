@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // as poultry building
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->index();//admin
+            $table->foreignId('user_id')->constrained('users','id')->onDelete('cascade')->index();//admin
             $table->string('name');
             $table->string('address');
             $table->string('description');

@@ -10,11 +10,11 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {   // team_user table for poulry building and user
         Schema::create('team_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id');//admin
-            $table->foreignId('user_id');//user
+            $table->foreignId('team_id');//building id
+            $table->foreignId('user_id');//user id
             $table->string('role')->nullable();//admin, member
             $table->timestamps();
 

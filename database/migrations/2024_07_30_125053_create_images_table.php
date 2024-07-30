@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users', 'id')->onUpdate('cascade');
-            $table->foreignId('team_id');
+            $table->foreignId('team_id')->constrained('teams', 'id')->onUpdate('cascade');
             $table->longText('encrypted_image');
             $table->longText('recognition_result_encrypted');
             $table->timestamps();
