@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -30,6 +31,7 @@ class ImageCaptureController extends Controller
 
             $recognitionResult = $this->imageRecognitionController->processImage($uploadedFile);
 
+
             if (!empty($recognitionResult['predictions'])) {
                 $this->encryptAndStoreImage($imageData, $recognitionResult);
                 return response()->json(['message' => 'Image processed successfully'], 201);
@@ -37,6 +39,7 @@ class ImageCaptureController extends Controller
                 return response()->json(['message' => 'No predictions found'], 404);
             }
         } catch (ValidationException $e) {
+            dd($e->errors());
             return $this->handleValidationException($e);
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -60,9 +63,10 @@ class ImageCaptureController extends Controller
         $encryptedImage = $this->encryptionController->encryptData($imageData);
         $encryptedRecognitionResult = $this->encryptionController->encryptData(json_encode($recognitionResult));
 
+
         Image::create([
             'user_id' => Auth::id(),
-            'building_id' => Auth::user()->building_id,
+            'team_id' => Auth::user()->currentTeam->id,
             'encrypted_image' => $encryptedImage,
             'recognition_result_encrypted' => $encryptedRecognitionResult,
         ]);

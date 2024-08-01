@@ -154,29 +154,29 @@
             userClicked = false;
         }
 
-        // elements.form.addEventListener("submit", function(event) {
-        //     event.preventDefault();
-        //     const formData = new FormData(elements.form);
-        //     const imageSize = formData.get("image").size;
-        //     const sizeInKB = imageSize / 1024;
-        //     const sizeInMB = sizeInKB / 1024;
-        //     let fileSize =
-        //         sizeInMB >= 1 ?
-        //         `${sizeInMB.toFixed(2)} MB` :
-        //         `${sizeInKB.toFixed(2)} KB`;
+        elements.form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(elements.form);
+            const imageSize = formData.get("image").size;
+            const sizeInKB = imageSize / 1024;
+            const sizeInMB = sizeInKB / 1024;
+            let fileSize =
+                sizeInMB >= 1 ?
+                `${sizeInMB.toFixed(2)} MB` :
+                `${sizeInKB.toFixed(2)} KB`;
 
-        //     let xhr = new XMLHttpRequest();
-        //     xhr.open("POST", "/image/upload", true);
-        //     xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/image/upload", true);
+            xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
 
-        //     xhr.upload.addEventListener("progress", updateProgress);
+            xhr.upload.addEventListener("progress", updateProgress);
 
-        //     xhr.addEventListener("readystatechange", () => handleReadyStateChange(xhr, fileSize));
+            xhr.addEventListener("readystatechange", () => handleReadyStateChange(xhr, fileSize));
 
-        //     xhr.onerror = handleUploadError;
-        //     xhr.send(formData);
-        //     cancelImage();
-        // });
+            xhr.onerror = handleUploadError;
+            xhr.send(formData);
+            cancelImage();
+        });
 
         function updateProgress(event) {
             setUIState(true);

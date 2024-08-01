@@ -11,7 +11,7 @@ class Image extends Model
 
     protected $fillable = [
         'user_id',
-        'building_id',
+        'team_id',
         'encrypted_image',
         'recognition_result_encrypted',
     ];

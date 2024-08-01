@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('admin.dashboard') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
@@ -17,7 +17,7 @@
                         <div class="flex justify-between h-16">
                             <div class="flex">
                                 <div class="shrink-0 flex items-center">
-                                    <a href="{{ route('dashboard') }}">
+                                    <a href="{{ route('admin.dashboard') }}">
                                         <span
                                             class="font-semibold text-xl text-black dark:text-white">{{ __('Welcome') }}</span>
                                         <span class="ml-4 font-semibold text-xl text-black dark:text-white">

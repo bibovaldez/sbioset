@@ -24,11 +24,16 @@ use Laravel\Fortify\Http\Controllers\{
     VerifyEmailController
 };
 use Laravel\Fortify\RoutePath;
+use App\Http\Controllers\CurrentTeamController;
+use Laravel\Jetstream\Jetstream;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+// Security Routes
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
     $enableViews = config('fortify.views', true);
     $limiter = config('fortify.limiters.login');
@@ -156,9 +161,8 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'verified',
         'checkRole:admin',
     ])->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('admin.admin-dashboard');
-        })->name('admin.dashboard');
+        Route::get('/admin/dashboard', [AdminController::class,'index'])
+        ->name('admin.dashboard');
     });
     // User Routes
     Route::middleware([
@@ -170,5 +174,16 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
             return view('dashboard');
         })->name('dashboard');
         Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
+    });
+});
+
+
+// Team Routes
+Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
+    Route::group(['middleware' => 'verified'], function () {
+        // Teams...
+        if (Jetstream::hasTeamFeatures()) {
+            Route::put('/current-team', [CurrentTeamController::class, 'update'])->name('current-team.update');
+        }
     });
 });
