@@ -64,13 +64,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function hasRole($role)
+    public function hasRole(string $role): bool
     {
         return $this->role === $role;
     }
 
     // for admin
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->hasRole('admin');
     }

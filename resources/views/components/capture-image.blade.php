@@ -2,58 +2,46 @@
     @csrf
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="text-center w-full max-w-md mx-auto">
-            <h1 class="text-4xl font-bold mt-3 mb-1">BioseT v1.0</h1>
-            <div id="wrapper" class="bg-white p-6 rounded-lg shadow-lg">
+            <h1 class="text-4xl font-bold mt-3 mb-1 dark:text-white">BioseT v1.0</h1>
+            <div id="wrapper" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
                 <div class="flex flex-col space-y-4">
-                    <button id="cameraButton" type="button" class="bg-gray-200 p-4 rounded-md">
-                        <div
-                            class="border-4 border-dashed border-red-600 rounded-md p-6 flex items-center justify-center">
-                            <p class="text-gray-600">Capture Image</p>
+                    <button id="cameraButton" type="button" class="bg-gray-200 dark:bg-gray-600 p-4 rounded-md">
+                        <div class="border-4 border-dashed border-red-600 dark:border-red-400 rounded-md p-6 flex items-center justify-center">
+                            <p class="text-gray-600 dark:text-gray-200">Capture Image</p>
                         </div>
                     </button>
                     <div>
-                        <p class="text-gray-600">OR</p>
+                        <p class="text-gray-600 dark:text-gray-200">OR</p>
                     </div>
-                    <label for="file"
-                        class="block w-full text-center bg-red-500 text-white font-bold py-2 px-4 rounded-md cursor-pointer hover:bg-red-600">
+                    <label for="file" class="block w-full text-center bg-red-500 dark:bg-red-700 text-white font-bold py-2 px-4 rounded-md cursor-pointer hover:bg-red-600 dark:hover:bg-red-800">
                         Choose File
                     </label>
                     <input type="file" name="image" id="file" class="hidden" accept="image/*">
-                    <div id="cameraModal"
-                        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center hidden">
-                        <div class="bg-white p-4 rounded-lg shadow-lg max-w-xl w-full mx-4">
-                            <video id="video" autoplay
-                                class="rounded-md w-full h-auto max-h-[70vh] object-contain"></video>
+                    <div id="cameraModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center hidden">
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-xl w-full mx-4">
+                            <video id="video" autoplay class="rounded-md w-full h-auto max-h-[70vh] object-contain"></video>
                             <canvas id="canvas" class="hidden"></canvas>
                             <div class="mt-4 flex flex-col sm:flex-row justify-between gap-2">
-                                <button type="button" id="closeCamera"
-                                    class="bg-red-600 text-white px-4 py-2 rounded-md w-full sm:w-auto">Close</button>
-                                <button type="button" id="captureImage"
-                                    class="bg-indigo-600 text-white px-4 py-2 rounded-md w-full sm:w-auto">Capture</button>
+                                <button type="button" id="closeCamera" class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-md w-full sm:w-auto">Close</button>
+                                <button type="button" id="captureImage" class="bg-indigo-600 dark:bg-indigo-700 text-white px-4 py-2 rounded-md w-full sm:w-auto">Capture</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="imagePreviewContainer"
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center hidden z-50">
-            <div class="bg-white p-4 rounded-lg shadow-lg relative max-w-xl w-full mx-4">
-                <button type="button" id="cancelImage"
-                    class="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+        <div id="imagePreviewContainer" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center hidden z-50">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg relative max-w-xl w-full mx-4">
+                <button type="button" id="cancelImage" class="absolute top-2 right-2 bg-red-600 dark:bg-red-700 text-white p-2 rounded-full hover:bg-red-700 dark:hover:bg-red-800 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
                 <img id="preview" class="mx-auto rounded-md w-full max-w-xs md:max-w-md lg:max-w-lg" />
                 <div class="flex justify-between mt-4">
-                    <button id="retakeButton" type="button"
-                        class="bg-yellow-600 text-white px-4 py-2 hidden rounded-md">Capture</button>
-                    <button id="rechooseButton" type="button"
-                        class="bg-blue-600 text-white px-4 py-2 hidden rounded-md">Change</button>
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md">Upload</button>
+                    <button id="retakeButton" type="button" class="bg-yellow-600 dark:bg-yellow-700 text-white px-4 py-2 hidden rounded-md">Capture</button>
+                    <button id="rechooseButton" type="button" class="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 hidden rounded-md">Change</button>
+                    <button type="submit" class="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-md">Upload</button>
                 </div>
             </div>
         </div>

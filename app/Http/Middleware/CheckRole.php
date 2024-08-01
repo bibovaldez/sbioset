@@ -23,6 +23,7 @@ class CheckRole
                 return $next($request);
             }
         }
+        
         if ($user->isAdmin()) {
             return $next($request);
         }

@@ -40,9 +40,6 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::get(RoutePath::for('login', '/login'), [AuthenticatedSessionController::class, 'create'])
             ->middleware(['guest:' . config('fortify.guard')])
             ->name('login');
-        Route::get(RoutePath::for('login', '/admin/login'), [AdminController::class, 'create'])
-            ->middleware(['guest:' . config('fortify.guard')])
-            ->name('admin.login');
     }
 
     Route::post(RoutePath::for('login', '/login'), [AuthenticatedSessionController::class, 'store'])
@@ -50,12 +47,6 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
             'guest:' . config('fortify.guard'),
             $limiter ? 'throttle:' . $limiter : null,
         ]));
-    Route::post(RoutePath::for('login', '/admin/login'), [AdminController::class, 'store'])
-        ->middleware(array_filter([
-            'guest:' . config('fortify.guard'),
-            $limiter ? 'throttle:' . $limiter : null,
-        ]));
-
     Route::post(RoutePath::for('logout', '/logout'), [AuthenticatedSessionController::class, 'destroy'])
         ->middleware([config('fortify.auth_middleware', 'auth') . ':' . config('fortify.guard')])
         ->name('logout');
@@ -157,29 +148,27 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::post(RoutePath::for('two-factor.recovery-codes', '/user/two-factor-recovery-codes'), [RecoveryCodeController::class, 'store'])
             ->middleware($twoFactorMiddleware);
     }
-});
 
-// Admin Routes
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-    'checkRole:admin',
-])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin_dashboard');
-    })->name('admin.dashboard');
-});
-
-// User Routes
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-    'checkRole:user',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
+    // Admin Routes
+    Route::middleware([
+        'auth:sanctum,admin',
+        config('jetstream.auth_session'),
+        'verified',
+        'checkRole:admin',
+    ])->group(function () {
+        Route::get('/admin/dashboard', function () {
+            return view('admin.admin-dashboard');
+        })->name('admin.dashboard');
+    });
+    // User Routes
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+        Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
+    });
 });

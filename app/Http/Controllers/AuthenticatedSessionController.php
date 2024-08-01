@@ -12,13 +12,13 @@ use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
-use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Response\LoginResponse;
 
 
 class AuthenticatedSessionController extends Controller
@@ -65,8 +65,6 @@ class AuthenticatedSessionController extends Controller
         $validator = Validator::make($request->all(), [
             'recaptcha_token' => ['required', new Recaptcha],
         ]);
-
-        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
