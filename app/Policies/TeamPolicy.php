@@ -31,7 +31,9 @@ class TeamPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        // Determine if the user has role on the given team...
+        // ito binago ko
+        return $user->isAdmin();
     }
 
     /**

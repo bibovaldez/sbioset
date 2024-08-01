@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="text-center w-full max-w-md mx-auto">
             <h1 class="text-4xl font-bold mt-3 mb-1 dark:text-white">BioseT v1.0</h1>
-            <div id="wrapper" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div id="wrapper" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg m-5">
                 <div class="flex flex-col space-y-4">
                     <button id="cameraButton" type="button" class="bg-gray-200 dark:bg-gray-600 p-4 rounded-md">
                         <div class="border-4 border-dashed border-red-600 dark:border-red-400 rounded-md p-6 flex items-center justify-center">

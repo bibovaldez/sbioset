@@ -11,13 +11,15 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hidden sm:flex sm:items-center sm:ms-6">
+                <nav
+                    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hidden sm:flex sm:items-center sm:ms-6">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between h-16">
                             <div class="flex">
                                 <div class="shrink-0 flex items-center">
                                     <a href="{{ route('dashboard') }}">
-                                        <span class="font-semibold text-xl text-black dark:text-white">{{ __('Welcome') }}</span>
+                                        <span
+                                            class="font-semibold text-xl text-black dark:text-white">{{ __('Welcome') }}</span>
                                         <span class="ml-4 font-semibold text-xl text-black dark:text-white">
                                             {{ Auth::user()->name }}
                                         </span>
@@ -178,6 +180,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
