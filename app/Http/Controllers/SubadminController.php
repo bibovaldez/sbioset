@@ -10,4 +10,8 @@ class SubadminController extends Controller
     {
         return view('sub-admin.subadmin-dashboard');
     }
+    public function subadminCalendar()
+    {
+        return view('sub-admin.subadmin-calendar');
+    }
 }

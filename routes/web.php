@@ -190,6 +190,8 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     ])->group(function () {
         Route::get('/subadmin/dashboard', [SubadminController::class,'subadminDashboard'])
         ->name('subadmin.dashboard');
+        Route::get('/subadmin/calendar', [SubadminController::class,'subadminCalendar'])
+        ->name('subadmin.calendar');
     });
 });
 

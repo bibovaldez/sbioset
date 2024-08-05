@@ -10,14 +10,12 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Scripts and Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-    <!-- Styles -->
     @livewireStyles
 </head>
 
@@ -25,22 +23,18 @@
     <x-banner />
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        {{-- check if user is authenticated and role admin --}}
         @php
-            // Get session roles data
-            $roles = session('role');
-            // dd($roles);
+            use App\Models\Team;
+            $user = Auth::user();
+            $team = Team::find($user->current_team_id);
+            $role = $user->isAdmin()
+                ? 'admin'
+                : ($user->isUser() && $user->hasTeamRole($team, 'admin')
+                    ? 'sub-admin'
+                    : 'user');
         @endphp
 
-       
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
+        @livewire("{$role}-navigation-menu")
 
         <!-- Page Content -->
         <main>
@@ -49,7 +43,6 @@
     </div>
 
     @stack('modals')
-
     @livewireScripts
 </body>
 
