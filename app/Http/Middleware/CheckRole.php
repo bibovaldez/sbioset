@@ -10,46 +10,66 @@ use App\Models\Team;
 
 class CheckRole
 {
+    private const ROLE_ROUTES = [
+        'admin' => 'admin.dashboard',
+        'sub-admin' => 'subadmin.dashboard',
+        'user' => 'dashboard'
+    ];
+
+    private const ADMIN_ALLOWED_ROUTES = ['admin.dashboard', 'admin.calendar', 'admin.upload'];
+
     public function handle(Request $request, Closure $next, ...$roles)
     {
         if (!Auth::check()) {
             return redirect('login');
         }
-        
+
         $user = Auth::user();
-        $team = Team::find($user->current_team_id);
 
         if (!$user instanceof User) {
             return abort(403, 'Invalid user type.');
         }
-        // super admin 
-        if ($user->isAdmin()) {
-            // Check if the current route is already 'admin.dashboard' or 'admin.calendar'
-            if (!$request->routeIs('admin.dashboard') && !$request->routeIs('admin.calendar') && !$request->routeIs('admin.upload')) {
-                return redirect()->route('admin.dashboard');
+
+        $userRole = $this->getUserRole($user);
+
+        if ($userRole && isset(self::ROLE_ROUTES[$userRole])) {
+            $intendedRoute = self::ROLE_ROUTES[$userRole];
+            if ($userRole === 'admin' && !$request->routeIs(self::ADMIN_ALLOWED_ROUTES)) {
+                return $this->redirectToRoleDashboard($intendedRoute, $userRole);
+            } elseif ($userRole !== 'admin' && !$request->routeIs($intendedRoute)) {
+                return $this->redirectToRoleDashboard($intendedRoute, $userRole);
             }
-            return $next($request);
-        }
-        // sub-admin
-        if ($user->hasTeamRole($team, 'admin')) {
-            if (!$request->routeIs('subadmin.dashboard')) {
-                return redirect()->route('subadmin.dashboard');
-            }
+            
             return $next($request);
         }
 
-
-        if ($user->isUser()) {
-            if (!$request->routeIs('dashboard')) {
-                return redirect()->route('dashboard');
-            }
-            return $next($request);
-        }
-        
         if (!empty($roles) && !$user->hasAnyRole($roles)) {
             return abort(403, 'Unauthorized action.');
         }
-        
+
         return $next($request);
+    }
+
+    private function getUserRole(User $user): ?string
+    {
+        if ($user->isAdmin()) {
+            return 'admin';
+        }
+
+        $team = Team::find($user->current_team_id);
+        if ($user->hasTeamRole($team, 'admin')) {
+            return 'sub-admin';
+        }
+
+        if ($user->isUser()) {
+            return 'user';
+        }
+
+        return null;
+    }
+
+    public function redirectToRoleDashboard(string $route, string $role)
+    {
+        return redirect()->route($route)->with('role', $role);
     }
 }

@@ -8,6 +8,6 @@ class SubadminController extends Controller
 {
     public function subadminDashboard()
     {
-        return view('subadmin.dashboard');
+        return view('sub-admin.subadmin-dashboard');
     }
 }

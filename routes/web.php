@@ -25,6 +25,7 @@ use Laravel\Fortify\Http\Controllers\{
 };
 use Laravel\Fortify\RoutePath;
 use App\Http\Controllers\CurrentTeamController;
+use App\Http\Controllers\SubadminController;
 use Laravel\Jetstream\Jetstream;
 
 
@@ -159,7 +160,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'auth:sanctum,admin',
         config('jetstream.auth_session'),
         'verified',
-        'checkRole:admin',
+        'checkRole',
     ])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class,'dashboard'])
         ->name('admin.dashboard');
@@ -173,7 +174,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
-        'checkRole:user',
+        'checkRole',
     ])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
@@ -185,9 +186,9 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'auth:sanctum,admin',
         config('jetstream.auth_session'),
         'verified',
-        'checkRole:sub-admin',
+        'checkRole',
     ])->group(function () {
-        Route::get('/subadmin/dashboard', [AdminController::class,'subadminDashboard'])
+        Route::get('/subadmin/dashboard', [SubadminController::class,'subadminDashboard'])
         ->name('subadmin.dashboard');
     });
 });

@@ -26,10 +26,13 @@
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         {{-- check if user is authenticated and role admin --}}
-        @livewire(Auth::check() && Auth::user()->role === 'admin' ? 'admin-navigation-menu' : 'navigation-menu')
-        
-       
+        @php
+            // Get session roles data
+            $roles = session('role');
+            // dd($roles);
+        @endphp
 
+       
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white dark:bg-gray-800 shadow">
