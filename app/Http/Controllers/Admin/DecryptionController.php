@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+
 class DecryptionController extends Controller
 {
     protected $key;

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImageCaptureController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\{
@@ -161,19 +161,34 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'verified',
         'checkRole:admin',
     ])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class,'index'])
+        Route::get('/admin/dashboard', [AdminController::class,'dashboard'])
         ->name('admin.dashboard');
+        Route::get('/admin/calendar', [AdminController::class,'calendar'])
+        ->name('admin.calendar');
+        Route::get('/admin/upload', [AdminController::class,'upload'])
+        ->name('admin.upload');
     });
     // User Routes
     Route::middleware([
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
+        'checkRole:user',
     ])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');
         Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
+    });
+    // Sub-Admin Routes
+    Route::middleware([
+        'auth:sanctum,admin',
+        config('jetstream.auth_session'),
+        'verified',
+        'checkRole:sub-admin',
+    ])->group(function () {
+        Route::get('/subadmin/dashboard', [AdminController::class,'subadminDashboard'])
+        ->name('subadmin.dashboard');
     });
 });
 

@@ -67,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
+        
     }
 
     // for admin
@@ -78,5 +79,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isUser()
     {
         return $this->hasRole('user');
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles);
     }
 }

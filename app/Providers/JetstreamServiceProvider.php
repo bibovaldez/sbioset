@@ -53,8 +53,8 @@ class JetstreamServiceProvider extends ServiceProvider
         ])->description('Administrator users can perform any action.');
 
         // Client role
-        Jetstream::role('client','Client',[
+        Jetstream::role('worker','worker',[
             'create',
-        ])->description('Client users can only create/upload data.');
+        ])->description('Worker users can only create/upload data.');
     }
 }

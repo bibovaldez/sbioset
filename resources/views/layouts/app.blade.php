@@ -25,7 +25,10 @@
     <x-banner />
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        @livewire('navigation-menu')
+        {{-- check if user is authenticated and role admin --}}
+        @livewire(Auth::check() && Auth::user()->role === 'admin' ? 'admin-navigation-menu' : 'navigation-menu')
+        
+       
 
         <!-- Page Heading -->
         @if (isset($header))

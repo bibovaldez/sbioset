@@ -11,24 +11,32 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <nav
-                    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 hidden sm:flex sm:items-center sm:ms-6">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex justify-between h-16">
-                            <div class="flex">
-                                <div class="shrink-0 flex items-center">
-                                    <a href="{{ route('dashboard') }}">
-                                        <span
-                                            class="font-semibold text-xl text-black dark:text-white">{{ __('Welcome') }}</span>
-                                        <span class="ml-4 font-semibold text-xl text-black dark:text-white">
-                                            {{ Auth::user()->name }}
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ route('admin.calendar') }}" :active="request()->routeIs('admin.calendar')">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
+                </div>
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ route('admin.upload') }}" :active="request()->routeIs('admin.upload')">
+                        {{ __('Upload') }}
+                    </x-nav-link>
+                </div> --}}
+                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                    <!-- Team Settings -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                        <x-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
+                            {{ __('Team Settings') }}
+                        </x-nav-link>
                     </div>
-                </nav>
+                @endif
+
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -67,14 +75,33 @@
                             <x-slot name="content">
                                 <div class="w-60">
                                     <!-- Team Management -->
-                                    {{-- <div class="block px-4 py-2 text-xs text-gray-400">
-                                        
-                                    </div> --}}
+                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                        {{ __('Manage Team') }}
+                                    </div>
 
                                     <!-- Team Settings -->
                                     <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('View Team') }}
+                                        {{ __('Team Settings') }}
                                     </x-dropdown-link>
+
+                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
+                                        <x-dropdown-link href="{{ route('teams.create') }}">
+                                            {{ __('Create New Team') }}
+                                        </x-dropdown-link>
+                                    @endcan
+
+                                    <!-- Team Switcher -->
+                                    @if (Auth::user()->allTeams()->count() > 1)
+                                        <div class="border-t border-gray-200 dark:border-gray-600"></div>
+
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                            {{ __('Switch Teams') }}
+                                        </div>
+
+                                        @foreach (Auth::user()->allTeams() as $team)
+                                            <x-switchable-team :team="$team" />
+                                        @endforeach
+                                    @endif
                                 </div>
                             </x-slot>
                         </x-dropdown>
@@ -161,7 +188,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-        
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
