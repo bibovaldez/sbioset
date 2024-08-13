@@ -24,14 +24,14 @@ class ImageCaptureController extends Controller
     public function upload(Request $request)
     {
         try {
-            $this->validateImage($request);
+            $this->validateImage($request); // Validate the image
 
-            $uploadedFile = $request->file('image');
-            $imageData = $uploadedFile->get();
+            $uploadedFile = $request->file('image'); // Get the uploaded file
+            $imageData = $uploadedFile->get(); // Get the image data
 
-            $recognitionResult = $this->imageRecognitionController->processImage($uploadedFile);
+            $recognitionResult = $this->imageRecognitionController->processImage($uploadedFile); // Process the image
 
-
+            // Check if predictions are found
             if (!empty($recognitionResult['predictions'])) {
                 $this->encryptAndStoreImage($imageData, $recognitionResult);
                 return response()->json(['message' => 'Image processed successfully'], 201);

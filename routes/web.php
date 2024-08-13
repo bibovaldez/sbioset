@@ -162,12 +162,14 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'verified',
         'checkRole',
     ])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class,'dashboard'])
-        ->name('admin.dashboard');
-        Route::get('/admin/calendar', [AdminController::class,'calendar'])
-        ->name('admin.calendar');
-        Route::get('/admin/upload', [AdminController::class,'upload'])
-        ->name('admin.upload');
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+            ->name('admin.dashboard');
+        Route::get('/admin/calendar', [AdminController::class, 'calendar'])
+            ->name('admin.calendar');
+        Route::get('/admin/upload', [AdminController::class, 'upload'])
+            ->name('admin.upload');
+        Route::get('/admin/addmember', [AdminController::class, 'addMember'])
+            ->name('admin.add-member');
     });
     // User Routes
     Route::middleware([
@@ -188,10 +190,10 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'verified',
         'checkRole',
     ])->group(function () {
-        Route::get('/subadmin/dashboard', [SubadminController::class,'subadminDashboard'])
-        ->name('subadmin.dashboard');
-        Route::get('/subadmin/calendar', [SubadminController::class,'subadminCalendar'])
-        ->name('subadmin.calendar');
+        Route::get('/subadmin/dashboard', [SubadminController::class, 'subadminDashboard'])
+            ->name('subadmin.dashboard');
+        Route::get('/subadmin/calendar', [SubadminController::class, 'subadminCalendar'])
+            ->name('subadmin.calendar');
     });
 });
 

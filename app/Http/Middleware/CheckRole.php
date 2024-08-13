@@ -19,7 +19,8 @@ class CheckRole
     private const ADMIN_ALLOWED_ROUTES = [
         'admin.dashboard',
         'admin.calendar',
-        'admin.upload'
+        'admin.upload',
+        'admin.add-member',
     ];
     private const SUBADMIN_ALLOWED_ROUTES = [
         'subadmin.dashboard',

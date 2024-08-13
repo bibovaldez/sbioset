@@ -22,6 +22,12 @@
                         {{ __('Calendar') }}
                     </x-nav-link>
                 </div>
+                {{-- add new member --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
+                        {{ __('Add New Member') }}
+                    </x-nav-link>
+                </div>
                 {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
                     <x-nav-link href="{{ route('admin.upload') }}" :active="request()->routeIs('admin.upload')">
                         {{ __('Upload') }}

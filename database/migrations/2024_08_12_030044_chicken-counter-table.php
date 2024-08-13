@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('chicken_counter', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id')->onUpdate('cascade');
-            $table->foreignId('team_id')->constrained('teams', 'id')->onUpdate('cascade');    
-            $table->longText('encrypted_image');
-            $table->longText('recognition_result_encrypted');
+            $table->foreignId('team_id')->constrained('teams', 'id')->onUpdate('cascade');
+            $table->integer('total_chicken');
+            $table->integer('total_healthy_chicken');
+            $table->integer('total_unhealthy_chicken');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        //
     }
 };
