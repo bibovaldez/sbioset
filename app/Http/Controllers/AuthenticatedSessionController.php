@@ -19,6 +19,7 @@ use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Response\LoginResponse;
+use Laravel\Jetstream\Jetstream;
 
 
 class AuthenticatedSessionController extends Controller
@@ -60,10 +61,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-       
-        // Validate reCAPTCHA
+
+        // Validate reCAPTCHA and terms and conditions
         $validator = Validator::make($request->all(), [
             'recaptcha_token' => ['required', new Recaptcha],
+            // terms and conditions
+            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

@@ -63,8 +63,8 @@
         <div class="col-span-6 sm:col-span-4">
             <x-label for="email" value="{{ __('Email') }}" />
             <x-input id="email" type="email" class="mt-1 block w-full opacity-65" wire:model="state.email" required disabled autocomplete="username" />
-            
         </div>
+        
     </x-slot>
 
     <x-slot name="actions">

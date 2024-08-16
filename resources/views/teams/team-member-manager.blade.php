@@ -1,9 +1,9 @@
 <div>
-    @if (Gate::check('addTeamMember', $team))
+    {{-- @if (Gate::check('addTeamMember', $team))
         <x-section-border />
 
         <!-- Add Team Member -->
-        <div class="mt-10 sm:mt-0">
+        {{-- <div class="mt-10 sm:mt-0">
             <x-form-section submit="addTeamMember">
                 <x-slot name="title">
                     {{ __('Add Team Member') }}
@@ -73,8 +73,8 @@
                     </x-button>
                 </x-slot>
             </x-form-section>
-        </div>
-    @endif
+        </div> --}}
+    {{-- @endif --}} 
 
     @if ($team->teamInvitations->isNotEmpty() && Gate::check('addTeamMember', $team))
         <x-section-border />
