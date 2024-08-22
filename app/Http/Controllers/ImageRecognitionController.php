@@ -26,10 +26,11 @@ class ImageRecognitionController extends Controller
         $apiKey = env("ROBOFLOW_API_KEY");
         $url = env('ROBOFLOW_API_URL');
         $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
-        
+        $confidenceThreshold = 0.4;
         $response = $client->post($url, [
             'query' => [
                 'api_key' => $apiKey,
+                'confidence_threshold' => $confidenceThreshold,
             ],
             'body' => $imageBase64,
             'headers' => [
@@ -38,6 +39,19 @@ class ImageRecognitionController extends Controller
         ]);
         $response = json_decode($response->getBody(), true);
 
+        return $this->analyzeResponse($response);
+    }
+
+    // analyze the response from the image recognition
+    protected function analyzeResponse($response)
+    {
+        foreach ($response['predictions'] as &$prediction) {
+            if ($prediction['class'] === 'Healthy' || $prediction['class'] === 'Unhealthy') {
+                continue;
+            } else {
+                $prediction['class'] = 'unknown';
+            }
+        }
         return $response;
     }
 }

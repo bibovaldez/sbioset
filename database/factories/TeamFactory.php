@@ -21,6 +21,8 @@ class TeamFactory extends Factory
             'name' => $this->faker->unique()->company(),
             'user_id' => User::factory(),
             'personal_team' => true,
+            'address' => 'Admin Team Address',
+            'description' => 'Admin Team Description',
         ];
     }
 }

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chicken_counter', function (Blueprint $table) {
+        Schema::create('chicken_counters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('team_id')->constrained('teams', 'id')->onUpdate('cascade');
             $table->integer('total_chicken');
             $table->integer('total_healthy_chicken');
             $table->integer('total_unhealthy_chicken');
+            $table->integer('total_unknown_chicken');
             $table->timestamps();
         });
     }

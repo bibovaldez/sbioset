@@ -9,10 +9,10 @@
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         @php
                             $stats = [
-                                ['title' => 'Registered Users', 'value' => 10],
                                 ['title' => 'Total Chicken', 'value' => 210],
-                                ['title' => 'Total Healthy Chickens', 'value' => 200],
-                                ['title' => 'Total Unhealthy Chicken', 'value' => 10],
+                                ['title' => 'Healthy Chickens', 'value' => 200],
+                                ['title' => 'Unhealthy Chicken', 'value' => 10],
+                                ['title' => 'Unkown Chicken', 'value' => 0],
                             ];
                         @endphp
 

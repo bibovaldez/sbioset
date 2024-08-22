@@ -9,7 +9,7 @@
     <meta name="description" content="This system focuses on security of user and data that being processed.">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="icon" href="{{ asset('icon.svg') }}" type="image" />
+    <link rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" />
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -38,9 +38,7 @@
                     ? 'sub-admin'
                     : 'user');
         @endphp
-
         @livewire("{$role}-navigation-menu")
-
         <!-- Page Content -->
         <main>
             {{ $slot }}
@@ -48,6 +46,7 @@
     </div>
 
     @stack('modals')
+    @stack('scripts')
     @livewireScripts
 </body>
 

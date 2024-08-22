@@ -19,12 +19,15 @@ class CheckRole
     private const ADMIN_ALLOWED_ROUTES = [
         'admin.dashboard',
         'admin.calendar',
-        'admin.upload',
         'admin.add-member',
+        'current-team.update',
+        'teams.create',
+        'teams.show',
     ];
     private const SUBADMIN_ALLOWED_ROUTES = [
         'subadmin.dashboard',
         'subadmin.calendar',
+        'teams.show',
     ];
 
     public function handle(Request $request, Closure $next)
