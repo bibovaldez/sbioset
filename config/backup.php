@@ -43,8 +43,18 @@ return [
                  * Set to `null` to include complete absolute path
                  * Example: base_path()
                  */
-                'relative_path' => null,
+                'relative_path' => base_path(),
             ],
+
+            // 'mysql' => [
+            //     'driver'    => 'mysql',
+            //     'dump' => [
+            //         'excludeTables' => [
+            //             'table_to_exclude_from_backup',
+            //             'another_table_to_exclude'
+            //         ]
+            //     ],
+            // ],
 
             /*
              * The names of the connections to the databases that should be backed up
@@ -152,6 +162,8 @@ return [
              */
             'disks' => [
                 'local',
+                // 's3',
+
             ],
         ],
 
@@ -211,11 +223,11 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => env('MAIL_FROM_ADDRESS'),
+            'to' => env('ADMIN_EMAIL'),
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('ADMIN_EMAIL'),
+                'name' => env('ADMIN_EMAIL'),
             ],
         ],
 
