@@ -2,6 +2,9 @@
 
 return [
 
+    // admin email
+    'admin_email' => env('ADMIN_EMAIL', 'admin@example.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Default Mailer

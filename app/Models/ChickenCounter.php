@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class chicken_counter extends Model
+class ChickenCounter extends Model
 {
     use HasFactory;
-
+    use HasFactory;
+    protected $table = 'chicken_counters';
     protected $fillable = [
         'user_id',
         'team_id',

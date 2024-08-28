@@ -20,7 +20,8 @@ use Laravel\Fortify\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Response\LoginResponse;
 use Laravel\Jetstream\Jetstream;
-
+use App\Actions\CheckAccountIsActive;
+use App\Actions\CheckAccountHasTeam;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -96,11 +97,18 @@ class AuthenticatedSessionController extends Controller
                 config('fortify.pipelines.login')
             ));
         }
-
+        // Check if the user is email verified
+        $user = \App\Models\User::where('email', $request->email)->first();
+        $isVerified = $user && $user->hasVerifiedEmail();
+        // check if the user is in invited state
+        $isInvited = $user && \App\Models\TeamInvitation::where('email', $user->email)->exists();
         return (new Pipeline(app()))->send($request)->through(array_filter([
             config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
             config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
             Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+            // Include CheckAccountHasTeam and CheckAccountIsActive only if the user is verified and not invited
+            (!$isInvited && $isVerified) ? CheckAccountHasTeam::class : null,
+            (!$isInvited && $isVerified) ? CheckAccountIsActive::class : null,
             AttemptToAuthenticate::class,
             PrepareAuthenticatedSession::class,
         ]));

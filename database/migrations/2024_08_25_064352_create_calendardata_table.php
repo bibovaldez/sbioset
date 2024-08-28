@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chicken_counters', function (Blueprint $table) {
+        // by day chicken counter
+        Schema::create('calendar_data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id')->constrained('teams', 'id')->onUpdate('cascade');
-            $table->integer('total_chicken');
-            $table->integer('total_healthy_chicken');
-            $table->integer('total_unhealthy_chicken');
-            $table->integer('total_unknown_chicken');
+            $table->foreignId('team_id');
+            $table->tinyText('total_chicken');
+            $table->tinyText('total_healthy_chicken');
+            $table->tinyText('total_unhealthy_chicken');
+            $table->tinyText('total_unknown_chicken');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('calendardata');
     }
 };

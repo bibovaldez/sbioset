@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AddmemberController;
+use App\Http\Controllers\Admin\CalendarController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImageCaptureController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\RoutePath;
 use App\Http\Controllers\CurrentTeamController;
@@ -10,11 +13,10 @@ use App\Http\Controllers\SubadminController;
 use Laravel\Jetstream\Jetstream;
 use App\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
+use App\Http\Controllers\TeamInvitationController;
 
 //  Landing page
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 
 // Security Routes
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
@@ -45,19 +47,19 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'checkRole',
     ])->group(function () {
         // SUPER ADMIN ROUTES
-        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+        Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])
             ->name('admin.dashboard');
-        Route::get('/admin/calendar', [AdminController::class, 'calendar'])
+        Route::get('/admin/calendar', [CalendarController::class, 'show'])
             ->name('admin.calendar');
-        Route::get('/admin/addmember', [AdminController::class, 'addMember'])
+        Route::get('/admin/addmember', [AddmemberController::class, 'addMember'])
             ->name('admin.add-member');
         Route::post('/admin/addmember', [RegisteredUserController::class, 'store'])
             ->name('admin.add-member');
 
         // SUB ADMIN ROUTES
-        Route::get('/subadmin/dashboard', [SubadminController::class, 'subadminDashboard'])
+        Route::get('/subadmin/dashboard', [DashboardController::class, 'dashboard'])
             ->name('subadmin.dashboard');
-        Route::get('/subadmin/calendar', [SubadminController::class, 'subadminCalendar'])
+        Route::get('/subadmin/calendar', [CalendarController::class, 'show'])
             ->name('subadmin.calendar');
 
         // Team Routes
@@ -68,6 +70,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
                     Route::put('/current-team', [CurrentTeamController::class, 'update'])->name('current-team.update');
                     Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
                     Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+                    
                 }
             });
         });
@@ -77,11 +80,34 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
-        // 'checkRole',
+        // 'checkRole', fix it later cant upload if this is enabled
+        'check.team.status',
     ])->group(function () {
-        Route::get('/dashboard', function () {
+        Route::get('/upload', function () {
             return view('dashboard');
         })->name('dashboard');
         Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
     });
 });
+
+
+
+// Teams invite routes
+Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
+    $authMiddleware = config('jetstream.guard')
+        ? 'auth:'.config('jetstream.guard')
+        : 'auth';
+    $authSessionMiddleware = config('jetstream.auth_session', false)
+        ? config('jetstream.auth_session')
+        : null;
+    Route::group(['middleware' => array_values(array_filter([$authMiddleware, $authSessionMiddleware]))], function () {
+        Route::group(['middleware' => 'verified'], function () {
+            if (Jetstream::hasTeamFeatures()) {
+                Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
+                    ->middleware(['signed'])
+                    ->name('team-invitations.accept');
+            }
+        });
+    });
+});
+

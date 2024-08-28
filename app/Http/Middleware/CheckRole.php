@@ -27,7 +27,7 @@ class CheckRole
     private const SUBADMIN_ALLOWED_ROUTES = [
         'subadmin.dashboard',
         'subadmin.calendar',
-        'teams.show',
+        // 'teams.show',
     ];
 
     public function handle(Request $request, Closure $next)

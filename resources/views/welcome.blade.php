@@ -45,6 +45,7 @@
                 </a>
             </div>
         </div>
+        {{-- Login --}}
         @if (Route::has('login'))
             <nav class="-mx-3 flex flex-1 justify-end">
                 <button id="theme-toggle"

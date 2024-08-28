@@ -1,9 +1,9 @@
 <div>
-    {{-- @if (Gate::check('addTeamMember', $team))
+     @if (Gate::check('addTeamMember', $team))
         <x-section-border />
 
         <!-- Add Team Member -->
-        {{-- <div class="mt-10 sm:mt-0">
+         <div class="mt-10 sm:mt-0">
             <x-form-section submit="addTeamMember">
                 <x-slot name="title">
                     {{ __('Add Team Member') }}
@@ -73,11 +73,12 @@
                     </x-button>
                 </x-slot>
             </x-form-section>
-        </div> --}}
-    {{-- @endif --}} 
+        </div> 
+    @endif 
 
     @if ($team->teamInvitations->isNotEmpty() && Gate::check('addTeamMember', $team))
         <x-section-border />
+        {{-- if user is admin role in both --}}
 
         <!-- Team Member Invitations -->
         <div class="mt-10 sm:mt-0">
@@ -100,7 +101,7 @@
                                     @if (Gate::check('removeTeamMember', $team))
                                         <!-- Cancel Team Invitation -->
                                         <button class="cursor-pointer ms-6 text-sm text-red-500 focus:outline-none"
-                                                            wire:click="cancelTeamInvitation({{ $invitation->id }})">
+                                            wire:click="cancelTeamInvitation({{ $invitation->id }})">
                                             {{ __('Cancel') }}
                                         </button>
                                     @endif
@@ -111,6 +112,7 @@
                 </x-slot>
             </x-action-section>
         </div>
+
     @endif
 
     @if ($team->users->isNotEmpty())
@@ -133,14 +135,17 @@
                         @foreach ($team->users->sortBy('name') as $user)
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <img class="w-8 h-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}">
+                                    <img class="w-8 h-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
+                                        alt="{{ $user->name }}">
                                     <div class="ms-4 dark:text-white">{{ $user->name }}</div>
                                 </div>
 
                                 <div class="flex items-center">
+
                                     <!-- Manage Team Member Role -->
                                     @if (Gate::check('updateTeamMember', $team) && Laravel\Jetstream\Jetstream::hasRoles())
-                                        <button class="ms-2 text-sm text-gray-400 underline" wire:click="manageRole('{{ $user->id }}')">
+                                        <button class="ms-2 text-sm text-gray-400 underline"
+                                            wire:click="manageRole('{{ $user->id }}')">
                                             {{ Laravel\Jetstream\Jetstream::findRole($user->membership->role)->name }}
                                         </button>
                                     @elseif (Laravel\Jetstream\Jetstream::hasRoles())
@@ -149,15 +154,30 @@
                                         </div>
                                     @endif
 
+                                    <!-- Activate/Deactivate User -->
+                                    @if (Gate::check('updateTeamMember', $team) && $this->user->id !== $user->id)
+                                        @if ($user->active)
+                                            <button class="cursor-pointer ms-6 text-sm text-red-500"
+                                                wire:click="confirmUserDeactivation('{{ $user->id }}')">
+                                                {{ __('Deactivate') }}
+                                            </button>
+                                        @else
+                                            <button class="cursor-pointer ms-6 text-sm text-green-500"
+                                                wire:click="confirmUserActivation('{{ $user->id }}')">
+                                                {{ __('Activate') }}
+                                            </button>
+                                        @endif
+                                    @endif
                                     <!-- Leave Team -->
                                     @if ($this->user->id === $user->id)
                                         {{-- <button class="cursor-pointer ms-6 text-sm text-red-500" wire:click="$toggle('confirmingLeavingTeam')">
                                             {{ __('Leave') }}
                                         </button> --}}
 
-                                    <!-- Remove Team Member -->
+                                        <!-- Remove Team Member -->
                                     @elseif (Gate::check('removeTeamMember', $team))
-                                        <button class="cursor-pointer ms-6 text-sm text-red-500" wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
+                                        <button class="cursor-pointer ms-6 text-sm text-red-500"
+                                            wire:click="confirmTeamMemberRemoval('{{ $user->id }}')">
                                             {{ __('Remove') }}
                                         </button>
                                     @endif
@@ -179,18 +199,22 @@
         <x-slot name="content">
             <div class="relative z-0 mt-1 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer">
                 @foreach ($this->roles as $index => $role)
-                    <button type="button" class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 {{ $index > 0 ? 'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none' : '' }} {{ ! $loop->last ? 'rounded-b-none' : '' }}"
-                                    wire:click="$set('currentRole', '{{ $role->key }}')">
+                    <button type="button"
+                        class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 {{ $index > 0 ? 'border-t border-gray-200 dark:border-gray-700 focus:border-none rounded-t-none' : '' }} {{ !$loop->last ? 'rounded-b-none' : '' }}"
+                        wire:click="$set('currentRole', '{{ $role->key }}')">
                         <div class="{{ $currentRole !== $role->key ? 'opacity-50' : '' }}">
                             <!-- Role Name -->
                             <div class="flex items-center">
-                                <div class="text-sm text-gray-600 dark:text-gray-400 {{ $currentRole == $role->key ? 'font-semibold' : '' }}">
+                                <div
+                                    class="text-sm text-gray-600 dark:text-gray-400 {{ $currentRole == $role->key ? 'font-semibold' : '' }}">
                                     {{ $role->name }}
                                 </div>
 
                                 @if ($currentRole == $role->key)
-                                    <svg class="ms-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <svg class="ms-2 h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 @endif
                             </div>
@@ -254,6 +278,48 @@
 
             <x-danger-button class="ms-3" wire:click="removeTeamMember" wire:loading.attr="disabled">
                 {{ __('Remove') }}
+            </x-danger-button>
+        </x-slot>
+    </x-confirmation-modal>
+
+    <!-- Activate User Confirmation Modal -->
+    <x-confirmation-modal wire:model.live="confirmingUserActivation">
+        <x-slot name="title">
+            {{ __('Activate User') }}
+        </x-slot>
+
+        <x-slot name="content">
+            {{ __('Are you sure you would like to activate this user?') }}
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-secondary-button wire:click="$toggle('confirmingUserActivation')" wire:loading.attr="disabled">
+                {{ __('Cancel') }}
+            </x-secondary-button>
+
+            <x-button class="ms-3" wire:click="activateUser" wire:loading.attr="disabled">
+                {{ __('Activate') }}
+            </x-button>
+        </x-slot>
+    </x-confirmation-modal>
+
+    <!-- Deactivate User Confirmation Modal -->
+    <x-confirmation-modal wire:model.live="confirmingUserDeactivation">
+        <x-slot name="title">
+            {{ __('Deactivate User') }}
+        </x-slot>
+
+        <x-slot name="content">
+            {{ __('Are you sure you would like to deactivate this user?') }}
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-secondary-button wire:click="$toggle('confirmingUserDeactivation')" wire:loading.attr="disabled">
+                {{ __('Cancel') }}
+            </x-secondary-button>
+
+            <x-danger-button class="ms-3" wire:click="deactivateUser" wire:loading.attr="disabled">
+                {{ __('Deactivate') }}
             </x-danger-button>
         </x-slot>
     </x-confirmation-modal>

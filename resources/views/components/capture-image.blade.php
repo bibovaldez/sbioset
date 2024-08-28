@@ -168,52 +168,52 @@
                 elements.rechooseButton.classList.add("hidden");
                 userClicked = false;
             }
-            // grecaptcha.ready(function() {
-            //     elements.form.addEventListener("submit", function(event) {
-            //         event.preventDefault();
-            //         grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {
-            //                 action: 'register'
-            //             })
-            //             .then(function(token) {
-            //                 document.getElementById("recaptcha_token").value = token;
-
-            //                 // Manually submit the form using XMLHttpRequest
-            //                 const formData = new FormData(elements.form);
-
-            //                 const imageSize = formData.get("image").size;
-            //                 const sizeInKB = imageSize / 1024;
-            //                 const sizeInMB = sizeInKB / 1024;
-            //                 let fileSize = sizeInMB >= 1 ? `${sizeInMB.toFixed(2)} MB` :
-            //                     `${sizeInKB.toFixed(2)} KB`;
-
-            //                 let xhr = new XMLHttpRequest();
-            //                 xhr.open("POST", elements.form.action, true);
-            //                 xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-
-            //                 xhr.upload.addEventListener("progress", updateProgress);
-
-            //                 xhr.addEventListener("readystatechange", () =>
-            //                     handleReadyStateChange(xhr, fileSize));
-
-            //                 xhr.onerror = handleUploadError;
-            //                 xhr.send(formData);
-
-            //                 cancelImage();
-            //             });
-            //     });
-            // });
             grecaptcha.ready(function() {
-                document.getElementById('imageForm').addEventListener("submit", function(event) {
+                elements.form.addEventListener("submit", function(event) {
                     event.preventDefault();
                     grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {
                             action: 'register'
                         })
                         .then(function(token) {
                             document.getElementById("recaptcha_token").value = token;
-                            document.getElementById('imageForm').submit();
+
+                            // Manually submit the form using XMLHttpRequest
+                            const formData = new FormData(elements.form);
+
+                            const imageSize = formData.get("image").size;
+                            const sizeInKB = imageSize / 1024;
+                            const sizeInMB = sizeInKB / 1024;
+                            let fileSize = sizeInMB >= 1 ? `${sizeInMB.toFixed(2)} MB` :
+                                `${sizeInKB.toFixed(2)} KB`;
+
+                            let xhr = new XMLHttpRequest();
+                            xhr.open("POST", elements.form.action, true);
+                            xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+
+                            xhr.upload.addEventListener("progress", updateProgress);
+
+                            xhr.addEventListener("readystatechange", () =>
+                                handleReadyStateChange(xhr, fileSize));
+
+                            xhr.onerror = handleUploadError;
+                            xhr.send(formData);
+
+                            cancelImage();
                         });
                 });
             });
+            // grecaptcha.ready(function() {
+            //     document.getElementById('imageForm').addEventListener("submit", function(event) {
+            //         event.preventDefault();
+            //         grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {
+            //                 action: 'register'
+            //             })
+            //             .then(function(token) {
+            //                 document.getElementById("recaptcha_token").value = token;
+            //                 document.getElementById('imageForm').submit();
+            //             });
+            //     });
+            // });
 
             function updateProgress(event) {
                 setUIState(true);

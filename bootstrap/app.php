@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'checkRole' => App\Http\Middleware\CheckRole::class,
-            
+            'check.team.status' => \App\Http\Middleware\CheckTeamStatus::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

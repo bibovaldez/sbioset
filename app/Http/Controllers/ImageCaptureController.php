@@ -3,29 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use App\Models\User;
-use App\Models\chicken_counter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use App\Rules\Recaptcha;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ChickenCounterController;
+
 
 
 class ImageCaptureController extends Controller
 {
     protected $imageRecognitionController;
     protected $encryptionController;
-    protected $decryptionController;
+    protected $chickenCounterController;
 
     public function __construct(
         ImageRecognitionController $imageRecognitionController,
         EncryptionController $encryptionController,
-        DecryptionController $decryptionController
+        ChickenCounterController $chickenCounterController
+
     ) {
         $this->imageRecognitionController = $imageRecognitionController;
         $this->encryptionController = $encryptionController;
-        $this->decryptionController = $decryptionController;
+        $this->chickenCounterController = $chickenCounterController;
     }
 
     public function upload(Request $request)
@@ -60,7 +59,6 @@ class ImageCaptureController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // recaptcha validation
             // 'recaptcha_token' => ['required', new Recaptcha],
         ], [
             'image.required' => 202,
@@ -81,76 +79,11 @@ class ImageCaptureController extends Controller
         ]);
     }
 
-    // Update the chicken counter
+    // Update the chicken counter overall count
     protected function updateChickenCounter($recognitionResult)
     {
-        // count how many predictions are found
-        $totalChicken = count($recognitionResult['predictions']);
-        // count how many predictions are healthy
-        $totalHealthyChicken = count(array_filter($recognitionResult['predictions'], function ($prediction) {
-            return $prediction['class'] === 'Healthy';
-        }));
-        // count how many predictions are unhealthy
-        $totalUnhealthyChicken = count(array_filter($recognitionResult['predictions'], function ($prediction) {
-            return $prediction['class'] === 'Unhealthy';
-        }));
-        // count how many predictions are unknown
-        $totalUnknownChicken = count(array_filter($recognitionResult['predictions'], function ($prediction) {
-            return $prediction['class'] === 'unknown';
-        }));
-
-        // Get the current chicken counter data
-        $currentCounter = chicken_counter::where('team_id', Auth::user()->currentTeam->id)->first();
-        
-        if ($currentCounter) {
-            // If data exists, decrypt, add new counts, and encrypt
-            $decryptedData = $this->decryptChickenCounterData($currentCounter);
-            $updatedData = [
-                'total_chicken' => $decryptedData['total_chicken'] + $totalChicken,
-                'total_healthy_chicken' => $decryptedData['total_healthy_chicken'] + $totalHealthyChicken,
-                'total_unhealthy_chicken' => $decryptedData['total_unhealthy_chicken'] + $totalUnhealthyChicken,
-                'total_unknown_chicken' => $decryptedData['total_unknown_chicken'] + $totalUnknownChicken,
-            ];
-
-            $encryptedData = $this->encryptChickenCounterData($updatedData);
-        } else {
-            // If no data exists, encrypt the new counts
-            $encryptedData = $this->encryptChickenCounterData([
-                'total_chicken' => $totalChicken,
-                'total_healthy_chicken' => $totalHealthyChicken,
-                'total_unhealthy_chicken' => $totalUnhealthyChicken,
-                'total_unknown_chicken' => $totalUnknownChicken,
-            ]);
-            
-        }
-
-        // Update or create the chicken counter with encrypted data
-        chicken_counter::updateOrCreate(
-            ['team_id' => Auth::user()->currentTeam->id],
-            $encryptedData
-        );
+        $this->chickenCounterController->updateChickenCounter($recognitionResult);
     }
-
-    protected function decryptChickenCounterData($data)
-    {
-        return [
-            'total_chicken' => $this->decryptionController->decryptData($data->total_chicken),
-            'total_healthy_chicken' => $this->decryptionController->decryptData($data->total_healthy_chicken),
-            'total_unhealthy_chicken' => $this->decryptionController->decryptData($data->total_unhealthy_chicken),
-            'total_unknown_chicken' => $this->decryptionController->decryptData($data->total_unknown_chicken),
-        ];
-    }
-
-    protected function encryptChickenCounterData($data)
-    {
-        return [
-            'total_chicken' => $this->encryptionController->encryptData($data['total_chicken']),
-            'total_healthy_chicken' => $this->encryptionController->encryptData($data['total_healthy_chicken']),
-            'total_unhealthy_chicken' => $this->encryptionController->encryptData($data['total_unhealthy_chicken']),
-            'total_unknown_chicken' => $this->encryptionController->encryptData($data['total_unknown_chicken']),
-        ];
-    }
-
     protected function handleValidationException(ValidationException $e)
     {
         $errors = $e->validator->errors();

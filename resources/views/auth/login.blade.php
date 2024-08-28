@@ -6,6 +6,22 @@
 
         <x-validation-errors class="mb-4" />
 
+        @session('error')
+            @push('scripts')
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ url('/') }}"; // Redirect to landing page
+                        }
+                    });
+                </script>
+            @endpush
+        @endsession
         @session('status')
             <div class="mb-4 font-medium text-sm text-green-600">
                 {{ $value }}

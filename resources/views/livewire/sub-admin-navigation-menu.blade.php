@@ -21,14 +21,12 @@
                         {{ __('Calendar') }}
                     </x-nav-link>
                 </div>
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <!-- Team Settings -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
-                        <x-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                            {{ __('Team Settings') }}
-                        </x-nav-link>
-                    </div>
-                @endif
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Upload') }}
+                    </x-nav-link>
+                </div>
+               
             </div>
             {{-- toggle theme --}}
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -130,13 +128,6 @@
             <x-responsive-nav-link href="{{ route('subadmin.calendar') }}" :active="request()->routeIs('subadmin.calendar')">
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
-
-
-            @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                    {{ __('Team Settings') }}
-                </x-responsive-nav-link>
-            @endif
         </div>
 
 

@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'current_team_id',
+        'active',
     ];
 
     /**
@@ -85,5 +86,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasAnyRole(array $roles): bool
     {
         return in_array($this->role, $roles);
+    }
+    public function hasTeam(): bool
+    {
+        return $this->current_team_id !== null;
+    }
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 }
