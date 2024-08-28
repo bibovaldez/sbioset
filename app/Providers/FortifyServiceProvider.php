@@ -16,17 +16,23 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\Fortify\AttemptToAuthenticate;
 use App\Actions\Fortify\RedirectIfTwoFactorAuthenticatable;
+use App\Models\User;
 use App\Notifications\MaxLoginAttemptsReached;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SystemUnderAttack;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
+use \App\Notifications\PasswordUpdateNotification;
+use Exception;
+
 
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    protected $failedLoginThreshold = 2;
-    protected $failedlogindecayMinutes = 5;
-    protected $systemAttackThreshold = 2;
+    protected $failedLoginThreshold = 5; // 5 failed login attempts ako naglagay dito wag oa hahaah
+    protected $failedlogindecayMinutes = 5; // 5 minutes before the failed login counter resets
+    protected $systemAttackThreshold = 10; // when 10 user failed to login in 5 minutes, the system may under attack using brute force or other attack
     /**
      * Register any application services.
      */
@@ -43,15 +49,13 @@ class FortifyServiceProvider extends ServiceProvider
             $email = Str::lower($request->input(Fortify::username()));
             $throttleKey = Str::transliterate($email . '|' . $request->ip());
 
-            return Limit::perMinutes($this->failedlogindecayMinutes,$this->failedLoginThreshold)->by($throttleKey)
+            return Limit::perMinutes($this->failedlogindecayMinutes, $this->failedLoginThreshold)->by($throttleKey)
                 ->response(function () use ($request, $email) {
                     $this->notifyAdminOfMaxLoginAttempts($email, $request->ip());
                     $this->checkForSystemAttack();
                     return redirect()->route('login')
                         ->with('error', 'Too many login attempts. Please try again in 5 minutes.');
                 });
-           
-
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
@@ -96,13 +100,35 @@ class FortifyServiceProvider extends ServiceProvider
 
     protected function implementSecurityMeasures(): void
     {
-        // Implement your security measures here
-        // For example, you could:
-        // 1. Increase the rate limiting threshold
-        // 2. Enable additional logging
-        // 3. Temporarily disable login for all users
-        // 4. Notify your security team
+        $this->SystemShutdown();
+        // logout all users
+        Auth::guard('web')->logout();
+        // run backup
+        Artisan::call('backup:run');
+        // email all user to update their password once system is live
+        $this->emailUsersToUpdatePassword();
+    }
+    protected function emailUsersToUpdatePassword(): void
+    {
+        $users =  User::all()->pluck('email')->toArray();
+        foreach ($users as $email) {
+            try {
+                Notification::route('mail', $email)
+                    ->notify(new PasswordUpdateNotification());
+            } catch (Exception $e) {
+                Log::error('Failed to send password update notification to ' . $email);
+            }
+        }
+    }
+    protected function SystemShutdown(): void
+    {
+        // Log the initiation of security measures
+        Log::info('Initiating security measures: placing the application in maintenance mode.');
 
+        // Run the Artisan command to put the application in maintenance mode with a custom error view
+        Artisan::call('down', ['--render' => 'errors::503']);
 
+        // Log the successful execution of the command
+        Log::info('Application successfully placed in maintenance mode.');
     }
 }
