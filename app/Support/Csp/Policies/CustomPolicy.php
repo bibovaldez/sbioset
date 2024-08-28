@@ -13,32 +13,41 @@ class Custompolicy extends Basic
         parent::configure();
 
         $this
-            ->addDirective('default-src', 'self')
-            ->addDirective('script-src', [
-                'self',
-                'https://cdn.jsdelivr.net',
-                'https://www.google.com',
-                'https://www.gstatic.com',  // Required for reCAPTCHA
-            ])
-            ->addDirective('style-src', [
-                'self',
-                'unsafe-inline',  // Required for Livewire
-                'https://fonts.bunny.net',
-                'https://cdnjs.cloudflare.com',
-            ])
-            ->addDirective('font-src', [
-                'self',
-                'https://fonts.bunny.net',
-                'https://cdnjs.cloudflare.com',
-            ])
-            ->addDirective('img-src', [
-                'self',
-                'data:',
-                'https:',  // Allows loading images from any HTTPS source
-            ])
-            ->addDirective('connect-src', [
-                'self',
-                'https://fonts.bunny.net',
-            ]);
+    ->addDirective('default-src', ['self'])
+    ->addDirective('script-src', [
+        'self',
+        'https://cdn.jsdelivr.net',
+        'https://www.google.com',
+        'https://www.gstatic.com',
+        'https://cdnjs.cloudflare.com',  // Added for Font Awesome
+        'unsafe-inline',  // May be required for some inline scripts
+        'unsafe-eval'     // May be required for some dynamic scripts
+    ])
+    ->addDirective('style-src', [
+        'self',
+        'unsafe-inline',
+        'https://fonts.bunny.net',
+        'https://cdnjs.cloudflare.com'
+    ])
+    ->addDirective('font-src', [
+        'self',
+        'https://fonts.bunny.net',
+        'https://cdnjs.cloudflare.com'
+    ])
+    ->addDirective('img-src', [
+        'self',
+        'data:',
+        'https:'
+    ])
+    ->addDirective('connect-src', [
+        'self',
+        'https://fonts.bunny.net',
+        'wss:',  // Added for WebSocket connections if needed
+        'https://www.google.com'  // Added for reCAPTCHA
+    ])
+    ->addDirective('frame-src', [
+        'self',
+        'https://www.google.com'  // Added for reCAPTCHA iframe
+    ]);
     }
 }

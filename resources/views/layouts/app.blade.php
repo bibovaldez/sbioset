@@ -2,12 +2,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark:bg-gray-900">
 
 <head>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- meta description --}}
     <meta name="description" content="This system focuses on security of user and data that being processed.">
-
+    
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" />
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
