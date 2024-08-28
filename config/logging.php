@@ -54,14 +54,15 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            'channels' => ['daily'],
             'ignore_exceptions' => false,
         ],
 
         'single' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_SINGLE_DAYS', 14),
             'replace_placeholders' => true,
         ],
 
