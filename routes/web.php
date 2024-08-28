@@ -83,7 +83,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         // 'checkRole', fix it later cant upload if this is enabled
         'check.team.status',
     ])->group(function () {
-        Route::get('/upload', function () {
+        Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');
         Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
