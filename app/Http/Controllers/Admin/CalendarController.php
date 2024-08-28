@@ -17,10 +17,10 @@ class CalendarController extends Controller
 
     public function show(Request $request)
     {
-        // dd($request->input('year'));
-        $year = $request->input('year', now()->year);
-        $month = $request->input('month', now()->month);
-    
+        // dd($request->all());  -> "date" => "2024-08-13"
+        $year = $request -> input('year', date('Y'));
+        $month = $request -> input('month', date('m'));
+    // dd($year, $month);
         $calendarData = $this->calendarDataService->getMonthData($year, $month);
 
         return view('Admin.admin-calendar', [

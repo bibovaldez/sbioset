@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "akaunting/laravel-firewall": "*",
         "guzzlehttp/guzzle": "^7.9",
         "illuminate/support": "*",
         "jaybizzle/crawler-detect": "^1.2",
@@ -15,8 +16,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "mobiledetect/mobiledetectlib": "^4.8",
-        "spatie/laravel-backup": "*",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-backup": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
