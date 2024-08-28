@@ -22,12 +22,7 @@
                         {{ __('Calendar') }}
                     </x-nav-link>
                 </div>
-                {{-- add new member --}}
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
-                    <x-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
-                        {{ __('Add New Member') }}
-                    </x-nav-link>
-                </div>
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Upload') }}
@@ -86,6 +81,11 @@
                                             {{ __('Create New Team') }}
                                         </x-dropdown-link>
                                     @endcan
+                                    {{-- add new member --}}
+                                    <x-dropdown-link href="{{ route('admin.add-member') }}" >
+                                        {{ __('Add New Member') }}
+                                    </x-dropdown-link>
+
 
                                     <!-- Team Switcher -->
                                     @if (Auth::user()->allTeams()->count() > 1)
