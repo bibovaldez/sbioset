@@ -64,7 +64,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
 
-    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void
+    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void // notify admin if the user reach the max login attempts syempre kailangan natin ng email para ma notify ang admin
     {
         $adminEmail = config('mail.admin_email', 'admin@example.com');
 
@@ -75,7 +75,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     protected function incrementFailedLoginCounter(): void
-    {
+    {// nag iincrement ng failed login attempts para malaman natin kung ilan na ang failed login attempts
         $failedLogins = Cache::get('failed_logins', 0) + 1;
         Cache::put('failed_logins', $failedLogins, now()->addMinutes(5));
     }
@@ -93,13 +93,13 @@ class FortifyServiceProvider extends ServiceProvider
     protected function notifyAdminOfSystemAttack(): void
     {
         $adminEmail = config('mail.admin_email');
-
         Notification::route('mail', $adminEmail)
             ->notify(new SystemUnderAttack());
     }
 
     protected function implementSecurityMeasures(): void
     {
+        // Log the initiation of security measures
         $this->SystemShutdown();
         // logout all users
         Auth::guard('web')->logout();
