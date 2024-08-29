@@ -8,6 +8,8 @@ use App\Services\ChickenCounterService;
 use App\Http\Controllers\EncryptionController;
 use App\Http\Controllers\DecryptionController;
 use App\Services\CalendarDataService;
+use Opcodes\LogViewer\Facades\LogViewer;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -32,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        LogViewer::auth(function ($request) {
+            return $request->user()
+                && in_array($request->user()->email, [
+                    'biosetservice@gmail.com', // palitan ng security team email
+                ]);
+        });
     }
 }

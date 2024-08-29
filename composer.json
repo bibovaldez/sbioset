@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "mobiledetect/mobiledetectlib": "^4.8",
+        "opcodesio/log-viewer": "^3.11",
         "spatie/laravel-backup": "^9.0",
         "spatie/laravel-csp": "^2.10"
     },
