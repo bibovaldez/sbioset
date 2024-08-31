@@ -82,7 +82,7 @@
                                         </x-dropdown-link>
                                     @endcan
                                     {{-- add new member --}}
-                                    <x-dropdown-link href="{{ route('admin.add-member') }}" >
+                                    <x-dropdown-link href="{{ route('admin.add-member') }}">
                                         {{ __('Add New Member') }}
                                     </x-dropdown-link>
 
@@ -190,11 +190,11 @@
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
         </div>
-        <div class="pt-2 pb-3 space-y-1">
+        {{-- <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
                 {{ __('Add New Member') }}
             </x-responsive-nav-link>
-        </div>
+        </div> --}}
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('upload')">
                 {{ __('Upload') }}
@@ -258,6 +258,9 @@
                             {{ __('Create New Team') }}
                         </x-responsive-nav-link>
                     @endcan
+                    <x-responsive-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
+                        {{ __('Add New Member') }}
+                    </x-responsive-nav-link>
 
                     <!-- Team Switcher -->
                     @if (Auth::user()->allTeams()->count() > 1)

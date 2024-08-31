@@ -21,9 +21,6 @@ trait PasswordValidationRules
                 ->numbers()
                 ->symbols()
                 ->uncompromised(),
-            'confirmed',
-            'not_pwned',
-            'not_regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/', 
         ];
     }
 }

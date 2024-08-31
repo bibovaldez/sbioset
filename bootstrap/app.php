@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Spatie\Csp\AddCspHeaders;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,12 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->use([
-        //     AddCspHeaders::class,
-        // ]);
+        $middleware->web([
+            \App\Http\Middleware\HSTS::class,
+            \App\Http\Middleware\HttpRedirect::class,
+            \Bepsvpt\SecureHeaders\SecureHeadersMiddleware::class,
+        ]);
         $middleware->alias([
             'checkRole' => App\Http\Middleware\CheckRole::class,
             'check.team.status' => \App\Http\Middleware\CheckTeamStatus::class,
+            'check.not.blocked' => \App\Http\Middleware\CheckNotBlocked::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

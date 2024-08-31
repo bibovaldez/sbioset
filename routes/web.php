@@ -14,15 +14,16 @@ use Laravel\Jetstream\Jetstream;
 use App\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 use App\Http\Controllers\TeamInvitationController;
-use Spatie\Csp\AddCspHeaders;
-use App\Support\Csp\Policies\CustomPolicy;
 
 
 // Security Routes
-Route::group(['middleware' => config('fortify.middleware', ['web']), AddCspHeaders::class . ':' . CustomPolicy::class], function () {
+Route::group(['middleware' => array_merge(
+    config('fortify.middleware', ['web']),
+    ['check.not.blocked']
+)], function () {
     //  Landing page
     Route::get('/', fn() => view('welcome'));
-    
+
     $enableViews = config('fortify.views', true);
     $limiter = config('fortify.limiters.login');
 

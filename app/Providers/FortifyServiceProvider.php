@@ -12,30 +12,25 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
-use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\Fortify\AttemptToAuthenticate;
-use App\Actions\Fortify\RedirectIfTwoFactorAuthenticatable;
 use App\Models\User;
+use App\Models\BlockedEntity;
 use App\Notifications\MaxLoginAttemptsReached;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SystemUnderAttack;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
-use \App\Notifications\PasswordUpdateNotification;
+use App\Notifications\PasswordUpdateNotification;
 use Exception;
-
-
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    protected $failedLoginThreshold = 5; // 5 failed login attempts ako naglagay dito wag oa hahaah
-    protected $failedlogindecayMinutes = 5; // 5 minutes before the failed login counter resets
-    protected $systemAttackThreshold = 10; // when 10 user failed to login in 5 minutes, the system may under attack using brute force or other attack
-    /**
-     * Register any application services.
-     */
+    protected $failedLoginThreshold = 1;
+    protected $failedlogindecayMinutes = 1;
+    protected $systemAttackThreshold = 1;
+    protected $blockDurationHours = 1;
+
     public function register(): void {}
 
     public function boot(): void
@@ -47,14 +42,21 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('login', function (Request $request) {
             $email = Str::lower($request->input(Fortify::username()));
-            $throttleKey = Str::transliterate($email . '|' . $request->ip());
+            $ip = $request->ip();
+            
+            if (BlockedEntity::isBlocked($email, $ip)) {
+                return $this->blockResponse();
+            }
+
+            $throttleKey = Str::transliterate($email . '|' . $ip);
 
             return Limit::perMinutes($this->failedlogindecayMinutes, $this->failedLoginThreshold)->by($throttleKey)
-                ->response(function () use ($request, $email) {
-                    $this->notifyAdminOfMaxLoginAttempts($email, $request->ip());
-                    $this->checkForSystemAttack();
+                ->response(function () use ($request, $email, $ip) {
+                    $this->notifyAdminOfMaxLoginAttempts($email, $ip);
+                    $this->checkForSystemAttack($email, $ip);
+                    $this->blockEntity($email, $ip);
                     return redirect()->route('login')
-                        ->with('error', 'Too many login attempts. Please try again in 5 minutes.');
+                        ->with('error', 'Too many login attempts. Your account has been temporarily blocked.');
                 });
         });
 
@@ -63,10 +65,20 @@ class FortifyServiceProvider extends ServiceProvider
         });
     }
 
-
-    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void // notify admin if the user reach the max login attempts syempre kailangan natin ng email para ma notify ang admin
+    protected function blockResponse()
     {
-        $adminEmail = config('mail.admin_email', 'admin@example.com');
+        return redirect()->route('login')
+            ->with('error', 'Access denied. Your account or IP is temporarily blocked.');
+    }
+
+    protected function blockEntity($email, $ip): void
+    {
+        BlockedEntity::block($email, $ip, $this->blockDurationHours);
+    }
+
+    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void
+    {
+        $adminEmail = config('mail.admin_email');
 
         Notification::route('mail', $adminEmail)
             ->notify(new MaxLoginAttemptsReached($email, $ip));
@@ -75,12 +87,12 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     protected function incrementFailedLoginCounter(): void
-    {// nag iincrement ng failed login attempts para malaman natin kung ilan na ang failed login attempts
+    {
         $failedLogins = Cache::get('failed_logins', 0) + 1;
         Cache::put('failed_logins', $failedLogins, now()->addMinutes(5));
     }
 
-    protected function checkForSystemAttack(): void
+    protected function checkForSystemAttack(string $email, string $ip): void
     {
         $failedLogins = Cache::get('failed_logins', 0);
 
@@ -99,18 +111,13 @@ class FortifyServiceProvider extends ServiceProvider
 
     protected function implementSecurityMeasures(): void
     {
-        // Log the initiation of security measures
-        $this->SystemShutdown();
-        // logout all users
         Auth::guard('web')->logout();
-        // run backup
         Artisan::call('backup:run');
-        // email all user to update their password once system is live
         $this->emailUsersToUpdatePassword();
     }
     protected function emailUsersToUpdatePassword(): void
     {
-        $users =  User::all()->pluck('email')->toArray();
+        $users = User::all()->pluck('email')->toArray();
         foreach ($users as $email) {
             try {
                 Notification::route('mail', $email)
@@ -119,16 +126,5 @@ class FortifyServiceProvider extends ServiceProvider
                 Log::error('Failed to send password update notification to ' . $email);
             }
         }
-    }
-    protected function SystemShutdown(): void
-    {
-        // Log the initiation of security measures
-        Log::info('Initiating security measures: placing the application in maintenance mode.');
-
-        // Run the Artisan command to put the application in maintenance mode with a custom error view
-        Artisan::call('down', ['--render' => 'errors::503']);
-
-        // Log the successful execution of the command
-        Log::info('Application successfully placed in maintenance mode.');
     }
 }

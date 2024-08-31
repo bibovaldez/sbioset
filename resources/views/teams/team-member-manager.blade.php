@@ -25,6 +25,7 @@
                         <x-label for="email" value="{{ __('Email') }}" />
                         <x-input id="email" type="email" class="mt-1 block w-full" wire:model="addTeamMemberForm.email" />
                         <x-input-error for="email" class="mt-2" />
+                        <x-input-error for="addTeamMemberForm.email" class="mt-2" />
                     </div>
 
                     <!-- Role -->

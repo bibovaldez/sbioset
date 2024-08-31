@@ -6,14 +6,18 @@ use App\Models\ChickenCounter;
 use App\Models\CalendarData;
 use App\Http\Controllers\DecryptionController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardService
 {
     protected $decryptionController;
+    protected $user;
+    protected $selectedTeamId;
 
     public function __construct(DecryptionController $decryptionController)
     {
         $this->decryptionController = $decryptionController;
+        $this->user = Auth::user();
     }
 
     public function getDashboardData()
@@ -33,7 +37,9 @@ class DashboardService
 
     protected function getOverallData()
     {
-        $chickenCounter = ChickenCounter::first();
+        // get the user selected team
+        $team = $this->user->current_team_id;
+        $chickenCounter = ChickenCounter::where('team_id', $team)->first();
         if (!$chickenCounter) {
             return $this->getEmptyCountData();
         }
@@ -43,22 +49,23 @@ class DashboardService
 
     protected function getMonthlyData()
     {
+        $team = $this->user->current_team_id;
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
 
-        return $this->getAggregatedData($startOfMonth, $endOfMonth);
+        return $this->getAggregatedData($startOfMonth, $endOfMonth, $team);
     }
 
     protected function getDailyData()
     {
         $today = Carbon::today();
-
-        return $this->getAggregatedData($today, $today->copy()->endOfDay());
+        $team = $this->user->current_team_id;
+        return $this->getAggregatedData($today, $today->copy()->endOfDay(), $team);
     }
 
-    protected function getAggregatedData($startDate, $endDate)
+    protected function getAggregatedData($startDate, $endDate, $team)
     {
-        $calendarData = CalendarData::whereBetween('created_at', [$startDate, $endDate])->get();
+        $calendarData = CalendarData::whereBetween('created_at', [$startDate, $endDate])->where('team_id', $team)->get();
 
         $aggregatedData = $this->getEmptyCountData();
 

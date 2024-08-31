@@ -58,7 +58,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+    <script >
         const monthlyData = @json($dashboardData['monthlyData']);
         const dailyData = @json($dashboardData['dailyData']);
 

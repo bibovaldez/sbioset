@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\ChickenCounterController;
+use App\Http\Controllers\EncryptionController;
+use App\Http\Controllers\ImageRecognitionController;
+use App\Rules\Recaptcha;
+use App\Http\Controllers\SaveImageResultController;
 
 
 
@@ -15,16 +19,19 @@ class ImageCaptureController extends Controller
     protected $imageRecognitionController;
     protected $encryptionController;
     protected $chickenCounterController;
+    protected $saveImageResultController;
 
     public function __construct(
         ImageRecognitionController $imageRecognitionController,
         EncryptionController $encryptionController,
-        ChickenCounterController $chickenCounterController
+        ChickenCounterController $chickenCounterController,
+        SaveImageResultController $saveImageResultController
 
     ) {
         $this->imageRecognitionController = $imageRecognitionController;
         $this->encryptionController = $encryptionController;
         $this->chickenCounterController = $chickenCounterController;
+        $this->saveImageResultController = $saveImageResultController;
     }
 
     public function upload(Request $request)
@@ -36,21 +43,20 @@ class ImageCaptureController extends Controller
             $imageData = $uploadedFile->get(); // Get the image data
 
             $recognitionResult = $this->imageRecognitionController->processImage($uploadedFile); // Process the image
-
-            // Update the chicken counter
-            $this->updateChickenCounter($recognitionResult);
+           
             // Check if predictions are found
             if (!empty($recognitionResult['predictions'])) {
-                $this->encryptAndStoreImage($imageData, $recognitionResult);
+                $this->updateChickenCounter($recognitionResult);
+                $this->saveImageResultController->saveImageResult($imageData, $recognitionResult);
                 return response()->json(['message' => 'Image processed successfully'], 201);
             } else {
                 return response()->json(['message' => 'No predictions found'], 404);
             }
         } catch (ValidationException $e) {
-            dd($e);
+    
             return $this->handleValidationException($e);
         } catch (\Exception $e) {
-            dd($e);
+  
             return response()->json(['error' => 'Image upload failed'], 500);
         }
     }
@@ -59,7 +65,7 @@ class ImageCaptureController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // 'recaptcha_token' => ['required', new Recaptcha],
+            'recaptcha_token' => ['required', new Recaptcha],
         ], [
             'image.required' => 202,
             'image.image' => 203,
@@ -67,17 +73,7 @@ class ImageCaptureController extends Controller
             'image.max' => 413,
         ]);
     }
-    protected function encryptAndStoreImage($imageData, $recognitionResult)
-    {
-        $encryptedImage = $this->encryptionController->encryptData($imageData);
-        $encryptedRecognitionResult = $this->encryptionController->encryptData(json_encode($recognitionResult));
-        Image::create([
-            'user_id' => Auth::id(),
-            'team_id' => Auth::user()->currentTeam->id,
-            'encrypted_image' => $encryptedImage,
-            'recognition_result_encrypted' => $encryptedRecognitionResult,
-        ]);
-    }
+  
 
     // Update the chicken counter overall count
     protected function updateChickenCounter($recognitionResult)

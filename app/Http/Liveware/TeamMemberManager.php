@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Liveware;
+namespace Laravel\Jetstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Laravel\Jetstream\Actions\UpdateTeamMemberRole;
@@ -92,6 +92,13 @@ class TeamMemberManager extends Component
      */
     public function addTeamMember()
     {
+      
+        // check if teh user id registered
+        $user = User::where('email', $this->addTeamMemberForm['email'])->first();
+        if(!$user){
+            $this->addError('addTeamMemberForm.email', 'User must be registered');
+            return;
+        }
         $this->resetErrorBag();
 
         if (Features::sendsTeamInvitations()) {

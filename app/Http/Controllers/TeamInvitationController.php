@@ -20,8 +20,8 @@ class TeamInvitationController extends Controller
      */
     public function accept(Request $request, $invitationId)
     {
-        // dd($request);
 
+        // dd($request->user());
         $model = Jetstream::teamInvitationModel();
 
         $invitation = $model::whereKey($invitationId)->firstOrFail();
