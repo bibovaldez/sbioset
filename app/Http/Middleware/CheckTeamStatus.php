@@ -18,12 +18,14 @@ class CheckTeamStatus
     {
         // check if the user has a team and if the user is active
         $user = $request->user();
-        
 
         // Check if the user has a team and if the user is active
         if ( ! $user->hasTeam() || ! $user->isActive()) {
             // Log out the user
-            return response()->view('auth.logout');
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'message' => 'You have been logged out because your team is inactive.',
+            ]);
         }
 
         // If everything is okay, proceed with the request

@@ -14,8 +14,9 @@ class CheckNotBlocked
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next )
     {
+
         $email = $request->user() ? $request->user()->email : null;
         $ip = $request->ip();
         // display access denied 

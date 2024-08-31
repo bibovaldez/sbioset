@@ -49,6 +49,7 @@ Route::group(['middleware' => array_merge(
         config('jetstream.auth_session'),
         'verified',
         'checkRole',
+        'limit.sessions',
     ])->group(function () {
         // SUPER ADMIN ROUTES
         Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])
@@ -83,8 +84,10 @@ Route::group(['middleware' => array_merge(
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
+        
         // 'checkRole', fix it later cant upload if this is enabled
         'check.team.status',
+        
     ])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');

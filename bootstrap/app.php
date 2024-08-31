@@ -13,15 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->web([
-            \App\Http\Middleware\HSTS::class,
-            \App\Http\Middleware\HttpRedirect::class,
-            \Bepsvpt\SecureHeaders\SecureHeadersMiddleware::class,
-        ]);
         $middleware->alias([
-            'checkRole' => App\Http\Middleware\CheckRole::class,
-            'check.team.status' => \App\Http\Middleware\CheckTeamStatus::class,
+        //     'checkRole' => App\Http\Middleware\CheckRole::class,
+        //     'check.team.status' => \App\Http\Middleware\CheckTeamStatus::class,
             'check.not.blocked' => \App\Http\Middleware\CheckNotBlocked::class,
+        //     // 'limit.sessions' => \App\Http\Middleware\LimitUserSessions::class,
+        //     // 'xframe' => \App\Http\Middleware\XFrameOptions::class,
+        //     // 'secure.headers' => \App\Http\Middleware\SecureHeaders::class,
+        //     // 'hsts' => \App\Http\Middleware\HSTS::class,
+        //     // 'http.redirect' => \App\Http\Middleware\HttpRedirect::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

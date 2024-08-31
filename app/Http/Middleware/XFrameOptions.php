@@ -5,9 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\App;
 
-class HttpRedirect
+class XFrameOptions
 {
     /**
      * Handle an incoming request.
@@ -16,10 +15,10 @@ class HttpRedirect
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->secure() && App::environment('production')) {
-            return redirect()->secure($request->getRequestUri(), 301);
-        }
-
-        return $next($request);
+        $response = $next($request);
+        // Set the X-Frame-Options header
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        
+        return $response;
     }
 }
