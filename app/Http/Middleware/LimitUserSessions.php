@@ -30,7 +30,7 @@ class LimitUserSessions
                 Auth::guard('web')->logout();
 
                 return redirect()->route('login')
-                    ->with('error', 'Your account is already logged in on another device');
+                    ->with('error', 'Your account is already logged in on other device');
             } else {
                 return $next($request);
             }

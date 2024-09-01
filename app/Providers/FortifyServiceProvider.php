@@ -26,8 +26,8 @@ use Exception;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    protected $failedLoginThreshold = 1;
-    protected $failedlogindecayMinutes = 1;
+    protected $failedLoginThreshold = 3; // 3 failed login attempts
+    protected $failedlogindecayMinutes = 5; // 5 minutes
     protected $systemAttackThreshold = 3; // 3 failed login attempts para tuluyan ng ma block yung account
     protected $blockDurationHours = 24; // 24 hours syang blocl sa system
 

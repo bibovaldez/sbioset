@@ -22,6 +22,8 @@ use App\Http\Response\LoginResponse;
 use Laravel\Jetstream\Jetstream;
 use App\Actions\CheckAccountIsActive;
 use App\Actions\CheckAccountHasTeam;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -74,6 +76,18 @@ class AuthenticatedSessionController extends Controller
         }
 
         return $this->loginPipeline($request)->then(function ($request) {
+            // if login sucessful, remove the cache key
+            $email = $request->email;
+            $ip = $request->ip();
+            // Remove the cache key
+            $throttleKey = Str::transliterate($email . '|' . $ip);
+            Cache::forget("{$throttleKey}");
+            Cache::forget("{$throttleKey}failed_logins");
+            Cache::forget("{$throttleKey}:timer");
+
+            dd('Login successful');
+
+
             return app(LoginResponse::class);
         });
     }
