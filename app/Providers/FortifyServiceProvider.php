@@ -28,8 +28,8 @@ class FortifyServiceProvider extends ServiceProvider
 {
     protected $failedLoginThreshold = 1;
     protected $failedlogindecayMinutes = 1;
-    protected $systemAttackThreshold = 1;
-    protected $blockDurationHours = 1;
+    protected $systemAttackThreshold = 3; // 3 failed login attempts para tuluyan ng ma block yung account
+    protected $blockDurationHours = 24; // 24 hours syang blocl sa system
 
     public function register(): void {}
 
@@ -43,7 +43,7 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $email = Str::lower($request->input(Fortify::username()));
             $ip = $request->ip();
-            
+
             if (BlockedEntity::isBlocked($email, $ip)) {
                 return $this->blockResponse();
             }
@@ -51,10 +51,9 @@ class FortifyServiceProvider extends ServiceProvider
             $throttleKey = Str::transliterate($email . '|' . $ip);
 
             return Limit::perMinutes($this->failedlogindecayMinutes, $this->failedLoginThreshold)->by($throttleKey)
-                ->response(function () use ($request, $email, $ip) {
-                    $this->notifyAdminOfMaxLoginAttempts($email, $ip);
-                    $this->checkForSystemAttack($email, $ip);
-                    $this->blockEntity($email, $ip);
+                ->response(function () use ($request, $email, $ip, $throttleKey) {
+                    $this->notifyAdminOfMaxLoginAttempts($email, $ip, $throttleKey);
+                    $this->checkForSystemAttack($email, $ip, $throttleKey);
                     return redirect()->route('login')
                         ->with('error', 'Too many login attempts. Your account has been temporarily blocked.');
                 });
@@ -76,28 +75,29 @@ class FortifyServiceProvider extends ServiceProvider
         BlockedEntity::block($email, $ip, $this->blockDurationHours);
     }
 
-    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void
+    protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip, string $throttleKey): void
     {
         $adminEmail = config('mail.admin_email');
 
         Notification::route('mail', $adminEmail)
             ->notify(new MaxLoginAttemptsReached($email, $ip));
 
-        $this->incrementFailedLoginCounter();
+        $this->incrementFailedLoginCounter($throttleKey);
     }
 
-    protected function incrementFailedLoginCounter(): void
+    protected function incrementFailedLoginCounter($throttleKey): void
     {
-        $failedLogins = Cache::get('failed_logins', 0) + 1;
-        Cache::put('failed_logins', $failedLogins, now()->addMinutes(5));
+        $failedLogins = Cache::get("{$throttleKey}failed_logins", 0) + 1;
+        Cache::put("{$throttleKey}failed_logins", $failedLogins, now()->addMinutes(5));
     }
 
-    protected function checkForSystemAttack(string $email, string $ip): void
+    protected function checkForSystemAttack(string $email, string $ip, $throttleKey): void
     {
-        $failedLogins = Cache::get('failed_logins', 0);
+        $failedLogins = Cache::get("{$throttleKey}failed_logins", 0);
 
         if ($failedLogins >= $this->systemAttackThreshold) {
             $this->notifyAdminOfSystemAttack();
+            $this->blockEntity($email, $ip);
             $this->implementSecurityMeasures();
         }
     }

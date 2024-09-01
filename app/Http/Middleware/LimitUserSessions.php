@@ -16,15 +16,12 @@ class LimitUserSessions
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            $userId = Auth::id();
-            $sessionId = Session::getId();
-            $userAgent = $this->getuserAgent($request);
 
             // Get all sessions for the user with the same device identifier
             $sessions = DB::table('sessions')
-                ->where('user_id', $userId)
-                ->where('user_agent', $userAgent)
-                ->orderBy('last_activity', 'desc')
+                ->where('user_id', Auth::id())
+                ->where('user_agent', $request->userAgent())
+                ->where('ip_address', $request->ip())
                 ->get();
 
             // Check if the user has more than the allowed number of sessions for this device
@@ -33,7 +30,7 @@ class LimitUserSessions
                 Auth::guard('web')->logout();
 
                 return redirect()->route('login')
-                    ->with('error', 'You have exceeded the maximum number of allowed sessions from this device.');
+                    ->with('error', 'Your account is already logged in on another device');
             } else {
                 return $next($request);
             }
