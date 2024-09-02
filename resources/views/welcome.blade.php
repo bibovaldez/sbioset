@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bioset</title>
     <!-- Tab Icon svg icon.svg -->
-    <link rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" />    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    <link rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" /> {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         /* Custom shapes and gradients */
@@ -31,6 +31,11 @@
         }
     </style>
 </head>
+@session('status')
+    <div class="mb-4 font-medium text-sm text-green-600">
+        {{ $value }}
+    </div>
+@endsession
 
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans">
 
@@ -78,7 +83,7 @@
 
     <!-- Main Content -->
     <main class="relative custom-shape-divider text-white dark:text-gray-100 py-24 px-4 lg:px-0">
-  
+
         <div class="max-w-7xl mx-auto mt-[-50px] flex flex-col lg:flex-row items-center">
             <!-- Left Section: Text -->
             <div class="lg:w-1/2 px-4 lg:px-8 mb-10 lg:mb-0 text-center lg:text-left">

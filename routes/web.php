@@ -14,6 +14,7 @@ use Laravel\Jetstream\Jetstream;
 use App\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 use App\Http\Controllers\TeamInvitationController;
+use App\Http\Controllers\LogoutController;
 
 
 // Security Routes
@@ -23,6 +24,9 @@ Route::group(['middleware' => array_merge(
 )], function () {
     //  Landing page
     Route::get('/', fn() => view('welcome'));
+    // logout other sessions
+    Route::get('/logout-other-sessions/{token}', [LogoutController::class, 'logoutOtherSessions'])->name('logout.other.sessions');
+
 
     $enableViews = config('fortify.views', true);
     $limiter = config('fortify.limiters.login');
