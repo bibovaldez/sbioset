@@ -28,9 +28,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => 'Admin',
-            'email' => 'biosetservice@gmail.com',
+            'email' => env('ADMIN_EMAIL'),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('XTiLUxSF2aa6mK'),
+            'password' => static::$password ??= Hash::make(env('ADMIN_PASSWORD')),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'remember_token' => null,

@@ -46,8 +46,10 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::defaultApiTokenPermissions(['read']);
 
         Jetstream::role('admin', 'Administrator', [
-            'read',
+            'read', // admin dashboard
+            'create', // upload data
         ])->description('Administrator users can perform monitoring action.');
+        
         // Client role
         Jetstream::role('worker','worker',[
             'create',

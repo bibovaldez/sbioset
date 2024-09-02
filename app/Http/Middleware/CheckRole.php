@@ -12,7 +12,7 @@ class CheckRole
 {
     private const ROLE_ROUTES = [
         'admin' => 'admin.dashboard',
-        'sub-admin' => 'subadmin.dashboard',
+        'sub-admin' => 'admin.dashboard',
         'user' => 'dashboard'
     ];
 
@@ -23,11 +23,18 @@ class CheckRole
         'current-team.update',
         'teams.create',
         'teams.show',
+        'image.upload',
+        'dashboard'
     ];
     private const SUBADMIN_ALLOWED_ROUTES = [
-        'subadmin.dashboard',
-        'subadmin.calendar',
-        // 'teams.show',
+        'admin.dashboard',
+        'admin.calendar',
+        'image.upload',
+        'dashboard'
+    ];
+    private const USER_ALLOWED_ROUTES = [
+        'image.upload',
+        'dashboard'
     ];
 
     public function handle(Request $request, Closure $next)
@@ -60,9 +67,9 @@ class CheckRole
                 if (!$request->routeIs(self::SUBADMIN_ALLOWED_ROUTES)) {
                     return $this->redirectToRoleDashboard($intendedRoute);
                 }
-            } else {
-                // Non-admin roles should be redirected if not on their intended route
-                if (!$request->routeIs($intendedRoute)) {
+            } elseif ($userRole === 'user') {
+                // User can access specified routes
+                if (!$request->routeIs(self::USER_ALLOWED_ROUTES)) {
                     return $this->redirectToRoleDashboard($intendedRoute);
                 }
             }

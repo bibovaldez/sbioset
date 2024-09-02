@@ -5,19 +5,19 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('subadmin.dashboard') }}">
+                    <a href="{{ route('admin.dashboard') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
-                    <x-nav-link href="{{ route('subadmin.dashboard') }}" :active="request()->routeIs('subadmin.dashboard')">
+                    <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
-                    <x-nav-link href="{{ route('subadmin.calendar') }}" :active="request()->routeIs('subadmin.calendar')">
+                    <x-nav-link href="{{ route('admin.calendar') }}" :active="request()->routeIs('admin.calendar')">
                         {{ __('Calendar') }}
                     </x-nav-link>
                 </div>
@@ -125,7 +125,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('subadmin.calendar') }}" :active="request()->routeIs('subadmin.calendar')">
+            <x-responsive-nav-link href="{{ route('admin.calendar') }}" :active="request()->routeIs('admin.calendar')">
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
         </div>

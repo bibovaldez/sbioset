@@ -19,7 +19,7 @@ use App\Http\Controllers\TeamInvitationController;
 // Security Routes
 Route::group(['middleware' => array_merge(
     config('fortify.middleware', ['web']),
-    ['check.not.blocked']
+    ['check.not.blocked', 'http.redirect']
 )], function () {
     //  Landing page
     Route::get('/', fn() => view('welcome'));
@@ -45,8 +45,9 @@ Route::group(['middleware' => array_merge(
 
     // Admin's Routes
     Route::middleware([
-        'auth:sanctum,admin',
+        'auth:sanctum',
         config('jetstream.auth_session'),
+        'check.team.status',
         'verified',
         'checkRole',
         'limit.sessions',
@@ -88,7 +89,7 @@ Route::group(['middleware' => array_merge(
         config('jetstream.auth_session'),
         'verified',
         'limit.sessions',
-        // 'checkRole', fix it later cant upload if this is enabled
+        'checkRole', //fix it later cant upload if this is enabled
         'check.team.status',
         'xframe',
         'secure.headers',

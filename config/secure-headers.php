@@ -634,15 +634,15 @@ return [
 
             'hashes' => [
                 'sha256' => [
-                    // 'sha256-hash-value-with-base64-encode',
+                    'sha256-hash-value-with-base64-encode',
                 ],
 
                 'sha384' => [
-                    // 'sha384-hash-value-with-base64-encode',
+                    'sha384-hash-value-with-base64-encode',
                 ],
 
                 'sha512' => [
-                    // 'sha512-hash-value-with-base64-encode',
+                    'sha512-hash-value-with-base64-encode',
                 ],
             ],
         ],

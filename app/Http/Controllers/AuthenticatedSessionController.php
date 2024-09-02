@@ -85,8 +85,6 @@ class AuthenticatedSessionController extends Controller
             Cache::forget("{$throttleKey}failed_logins");
             Cache::forget("{$throttleKey}:timer");
 
-            dd('Login successful');
-
 
             return app(LoginResponse::class);
         });
