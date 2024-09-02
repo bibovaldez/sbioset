@@ -38,6 +38,7 @@ Route::group(['middleware' => array_merge(
         ->middleware(array_filter([
             'guest:' . config('fortify.guard'),
             $limiter ? 'throttle:' . $limiter : null,
+            'honeypot',
         ]));
     Route::post(RoutePath::for('logout', '/logout'), [AuthenticatedSessionController::class, 'destroy'])
         ->middleware([config('fortify.auth_middleware', 'auth') . ':' . config('fortify.guard')])
@@ -54,6 +55,7 @@ Route::group(['middleware' => array_merge(
         'xframe',
         'secure.headers',
         'hsts',
+        'honeypot',
     ])->group(function () {
         // SUPER ADMIN ROUTES
         Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])
@@ -94,6 +96,7 @@ Route::group(['middleware' => array_merge(
         'xframe',
         'secure.headers',
         'hsts',
+        'honeypot',
     ])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');

@@ -5,7 +5,7 @@
         </x-slot>
 
         <x-validation-errors class="mb-4" />
-
+        {{-- Error response --}}
         @session('error')
             @push('scripts')
                 <script>
@@ -22,6 +22,7 @@
                 </script>
             @endpush
         @endsession
+        {{-- Login response --}}
         @session('status')
             <div class="mb-4 font-medium text-sm text-green-600">
                 {{ $value }}
@@ -30,7 +31,7 @@
 
         <form method="POST" action="{{ isset($guard) ? url($guard . '/login') : route('login') }}" id="loginForm">
             @csrf
-
+            @honeypot
             <input type="hidden" class="g-recaptcha" name="recaptcha_token" id="recaptcha_token">
 
 
