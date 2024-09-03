@@ -3,6 +3,7 @@
 namespace App\Actions\Jetstream;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Events\TeamMemberUpdated;
 use Laravel\Jetstream\Jetstream;
@@ -21,7 +22,6 @@ class UpdateTeamMemberRole
      */
     public function update($user, $team, $teamMemberId, string $role)
     {
-        dd('UpdateTeamMemberRole');
         Gate::forUser($user)->authorize('updateTeamMember', $team);
 
         Validator::make([
@@ -35,5 +35,12 @@ class UpdateTeamMemberRole
         ]);
 
         TeamMemberUpdated::dispatch($team->fresh(), Jetstream::findUserByIdOrFail($teamMemberId));
+
+        $this->log_activity($user, $team, $teamMemberId, $role);
+    }
+
+    protected function log_activity($user, $team, $teamMemberId, $role)
+    {
+        Log::info('Team member role updated', ['user' => $user->name, 'team' => $team->name, 'team_member_id' => $teamMemberId, 'role' => $role]);
     }
 }

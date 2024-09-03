@@ -15,6 +15,7 @@ use Laravel\Jetstream\Events\InvitingTeamMember;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Mail\TeamInvitation;
 use Laravel\Jetstream\Rules\Role;
+use Illuminate\Support\Facades\Log;
 
 class InviteTeamMember implements InvitesTeamMembers
 {
@@ -33,8 +34,9 @@ class InviteTeamMember implements InvitesTeamMembers
             'email' => $email,
             'role' => $role,
         ]);
-
         Mail::to($email)->send(new TeamInvitation($invitation));
+
+        $this->log_activity($user, $team, $email, $role);
     }
 
     /**
@@ -84,5 +86,11 @@ class InviteTeamMember implements InvitesTeamMembers
                 __('This user already belongs to the team.')
             );
         };
+    }
+
+    protected function log_activity(User $user, Team $team, string $email, ?string $role): void
+    {
+        $role = $role ?? 'member';
+        Log::info('Team member invited', ['user' => $user->name, 'team' => $team->name, 'email' => $email, 'role' => $role]);
     }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
@@ -48,6 +48,7 @@ class CreateNewUser implements CreatesNewUsers
                 'current_team_id' => $selectedTeamId,
             ]), function (User $user) use ($selectedTeamId) {
                 $this->team_user($user, $selectedTeamId);
+                $this->Log_activity($user);
             });
         });
     }
@@ -67,5 +68,14 @@ class CreateNewUser implements CreatesNewUsers
                 'updated_at' => now(),
             ]);
         });
+    }
+
+    protected function Log_activity(User $user)
+    {
+        Log::info('User Created', [
+            'user_id' => $user->id,
+            'username' => $user->name,
+            'user_email' => $user->email,
+        ]);
     }
 }

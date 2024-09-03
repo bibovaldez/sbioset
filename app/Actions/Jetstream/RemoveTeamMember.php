@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Laravel\Jetstream\Contracts\RemovesTeamMembers;
 use Laravel\Jetstream\Events\TeamMemberRemoved;
+use Illuminate\Support\Facades\Log;
 
 class RemoveTeamMember implements RemovesTeamMembers
 {
@@ -24,6 +25,8 @@ class RemoveTeamMember implements RemovesTeamMembers
         $team->removeUser($teamMember);
 
         TeamMemberRemoved::dispatch($team, $teamMember);
+
+        $this->log_activity($user, $team, $teamMember);
     }
 
     /**
@@ -47,5 +50,10 @@ class RemoveTeamMember implements RemovesTeamMembers
                 'team' => [__('You may not leave a team that you created.')],
             ])->errorBag('removeTeamMember');
         }
+    }
+
+    protected function log_activity(User $user, Team $team, User $teamMember)
+    {
+        Log::info('Team member removed', ['user' => $user->name, 'team' => $team->name, 'team_member' => $teamMember->name]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Contracts\UpdatesTeamNames;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTeamName implements UpdatesTeamNames
 {
@@ -26,5 +27,12 @@ class UpdateTeamName implements UpdatesTeamNames
         $team->forceFill([
             'name' => $input['name'],
         ])->save();
+
+        $this->log_activity($user, $team);
+    }
+
+    protected function log_activity(User $user, Team $team)
+    {
+        Log::info('Team name updated', ['user' => $user->name, 'team' => $team->name]);
     }
 }

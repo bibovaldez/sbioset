@@ -5,6 +5,7 @@ namespace App\Actions\Jetstream;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Events\AddingTeam;
@@ -31,7 +32,12 @@ class CreateTeam implements CreatesTeams
             'name' => $input['name'],
             'personal_team' => false,
         ]));
-
+        $this->Log_activity($user, $team);
         return $team;
+    }
+
+    protected function Log_activity(User $user, Team $team)
+    {
+        Log::info('Team created', ['user' => $user->name, 'team' => $team->name]);
     }
 }
