@@ -21,7 +21,7 @@ class CheckNotBlocked
         $ip = $request->ip();
         // display access denied 
         if (BlockedEntity::isBlocked($email, $ip)) {
-            $message = __('Access denied. Your account or IP address has been blocked.');
+            $message = __('Access denied. Your IP address has been blocked.');
             abort(403, $message);
         }
         return $next($request);

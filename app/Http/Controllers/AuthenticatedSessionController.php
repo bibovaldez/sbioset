@@ -24,6 +24,7 @@ use App\Actions\CheckAccountIsActive;
 use App\Actions\CheckAccountHasTeam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -84,8 +85,9 @@ class AuthenticatedSessionController extends Controller
             Cache::forget("{$throttleKey}");
             Cache::forget("{$throttleKey}failed_logins");
             Cache::forget("{$throttleKey}:timer");
+            Cache::forget("recent_attempts:{$email}");
 
-
+            $this->Log_activity($email, $ip);
             return app(LoginResponse::class);
         });
     }
@@ -142,5 +144,10 @@ class AuthenticatedSessionController extends Controller
         }
 
         return app(LogoutResponse::class);
+    }
+
+    public function Log_activity($email, $ip)
+    {
+        Log::info("User with email: $email and IP: $ip has performed a successful login.");
     }
 }

@@ -36,6 +36,22 @@
         {{ $value }}
     </div>
 @endsession
+@session('error')
+    @push('scripts')
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ url('/') }}"; // Redirect to landing page
+                }
+            });
+        </script>
+    @endpush
+@endsession
 
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans">
 

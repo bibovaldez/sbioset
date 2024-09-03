@@ -11,8 +11,7 @@ use App\Http\Controllers\EncryptionController;
 use App\Http\Controllers\ImageRecognitionController;
 use App\Rules\Recaptcha;
 use App\Http\Controllers\SaveImageResultController;
-
-
+use Illuminate\Support\Facades\Log;
 
 class ImageCaptureController extends Controller
 {
@@ -48,6 +47,7 @@ class ImageCaptureController extends Controller
             if (!empty($recognitionResult['predictions'])) {
                 $this->updateChickenCounter($recognitionResult);
                 $this->saveImageResultController->saveImageResult($imageData, $recognitionResult);
+                $this->LogActivity($recognitionResult);
                 return response()->json(['message' => 'Image processed successfully'], 201);
             } else {
                 return response()->json(['message' => 'No predictions found'], 404);
@@ -84,5 +84,15 @@ class ImageCaptureController extends Controller
     {
         $errors = $e->validator->errors();
         return response()->json(['message' => $errors->first()], $errors->first());
+    }
+
+    protected function LogActivity($recognitionResult)
+    {
+        Log::info('Image Upload Activity', [
+            'user_id' => Auth::id(),
+            'username' => Auth::user()->name,
+            'user_email' => Auth::user()->email,
+            'image_id' => $recognitionResult['inference_id'],
+        ]);
     }
 }

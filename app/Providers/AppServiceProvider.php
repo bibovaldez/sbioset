@@ -36,9 +36,7 @@ class AppServiceProvider extends ServiceProvider
     {
         LogViewer::auth(function ($request) {
             return $request->user()
-                && in_array($request->user()->email, [
-                    'biosetservice@gmail.com', // palitan ng security team email
-                ]);
+                && $request->user()->isAdmin();
         });
     }
 }

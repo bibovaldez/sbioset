@@ -10,7 +10,7 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
                     <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
@@ -26,6 +26,12 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Upload') }}
+                    </x-nav-link>
+                </div>
+                
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex dark:text-white">
+                    <x-nav-link href="{{ env('APP_URL') }}/log-viewer">
+                        {{ __('Log Viewer') }}
                     </x-nav-link>
                 </div>
 
@@ -190,14 +196,16 @@
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
         </div>
-        {{-- <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
-                {{ __('Add New Member') }}
-            </x-responsive-nav-link>
-        </div> --}}
+
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('upload')">
                 {{ __('Upload') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ env('APP_URL') }}/log-viewer">
+                {{ __('Log Viewer') }}
             </x-responsive-nav-link>
         </div>
 
