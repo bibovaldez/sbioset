@@ -12,6 +12,7 @@
                     <x-validation-errors class="mb-4" />
                     <form method="POST" action="{{ route('admin.add-member') }}">
                         @csrf
+                        @honeypot
                         <div class="grid grid-cols-6 gap-6">
                             {{-- Name --}}
                             <div class="col-span-6 sm:col-span-4">

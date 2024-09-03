@@ -8,6 +8,8 @@
                             {{ Carbon\Carbon::create($year, $month, 1)->format('F Y') }}
                         </h1>
                         <form id="calendar-form" action="{{ route('admin.calendar') }}" method="get" class="flex flex-col sm:flex-row sm:items-center sm:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            @csrf
+                            @honeypot
                             <div class="flex items-center">
                                 <label for="month" class="mr-2 text-gray-700 dark:text-gray-300">Month:</label>
                                 <select id="month" name="month" class="form-select rounded-md shadow-sm mt-1 block w-full">

@@ -1,5 +1,6 @@
 <form id="imageForm" action="{{ route('image.upload') }}" method="post" enctype="multipart/form-data">
     @csrf
+    @honeypot
     <input type="hidden" class="g-recaptcha" name="recaptcha_token" id="recaptcha_token">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="text-center w-full max-w-md mx-auto">
