@@ -16,11 +16,9 @@ class HttpRedirect
      */
     public function handle(Request $request, Closure $next): Response
     {
-        dd($request->secure());
         if (!$request->secure() && App::environment('production')) {
             return redirect()->secure($request->getRequestUri(), 301);
         }
-
         return $next($request);
     }
 }
