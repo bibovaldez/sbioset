@@ -18,7 +18,7 @@ class EncryptionController extends Controller
 
     public function encryptData($data)
     {
-        return $this->compressAndEncode($this->encrypt($data));
+        return base64_encode($this->encrypt($this->compressAndEncode($data)));
     }
     protected function encrypt($data)
     {
