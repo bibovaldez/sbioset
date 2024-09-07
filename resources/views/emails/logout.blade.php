@@ -5,7 +5,7 @@
 
 <p><a href="{{ $logoutLink }}">Logout from other sessions</a></p>
 
-<p>{{ __('If you did not expect to receive an invitation to this team, you may discard this email.') }}</p>
+<p>{{ __('If you did not expect to receive this email, please ignore it.') }}</p>
 
 {{ __('Regards,') }}<br>
 {{ config('app.name') }}

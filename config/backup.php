@@ -46,15 +46,24 @@ return [
                 'relative_path' => base_path(),
             ],
 
-            // 'mysql' => [
-            //     'driver'    => 'mysql',
-            //     'dump' => [
-            //         'excludeTables' => [
-            //             'table_to_exclude_from_backup',
-            //             'another_table_to_exclude'
-            //         ]
-            //     ],
-            // ],
+            'mysql' => [
+                'driver' => 'mysql',
+                'host' => env('DB_HOST', '127.0.0.1'),
+                'port' => env('DB_PORT', '3306'),
+                'database' => env('DB_DATABASE', 'forge'),
+                'username' => env('DB_USERNAME', 'forge'),
+                'password' => env('DB_PASSWORD', ''),
+                'unix_socket' => env('DB_SOCKET', ''),
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'prefix' => '',
+                'strict' => true,
+                'engine' => null,
+                'dump' => [
+                    'dump_binary_path' => 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin', // Specify the full path to mysqldump here
+                    'use_single_transaction' => true,
+                ],
+            ],
 
             /*
              * The names of the connections to the databases that should be backed up

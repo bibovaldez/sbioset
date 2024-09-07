@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Team;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
 class CheckRole
 {
@@ -39,6 +41,10 @@ class CheckRole
 
     public function handle(Request $request, Closure $next)
     {
+        // $mysqldumpPath = shell_exec('which mysqldump'); // Check if mysqldump is found
+        // Log::info('mysqldump path: ' . $mysqldumpPath);
+        // Artisan::call('backup:run');
+
         if (!Auth::check()) {
             return redirect()->route('login');
         }

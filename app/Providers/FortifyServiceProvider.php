@@ -29,7 +29,7 @@ use Illuminate\Validation\Rules\Password;
 class FortifyServiceProvider extends ServiceProvider
 {
     protected $failedLoginThreshold = 3; // 3 failed login attempts
-    protected $failedLoginDecayMinutes = 1; // 5 minutes lockout
+    protected $failedLoginDecayMinutes = 5; // 5 minutes lockout
     protected $systemAttackThreshold = 3; // Increased from 3 to 10
     protected $blockDurationHours = 48; // Increased from 24 to 48 hours
     protected $passwordExpirationDays = 30; // New: Password expiration after 30 days
@@ -162,6 +162,9 @@ class FortifyServiceProvider extends ServiceProvider
         Artisan::call('backup:run');
         $this->emailUsersToUpdatePassword();
         // Consider additional measures like temporarily disabling new user registrations
+
+        $mysqldumpPath = shell_exec('which mysqldump'); // Check if mysqldump is found
+        Log::info('mysqldump path: ' . $mysqldumpPath); // Log it to check
     }
 
     protected function emailUsersToUpdatePassword(): void
