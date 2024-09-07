@@ -1,5 +1,6 @@
 <?php
 
+// BiosecurityTech\vendor\laravel\jetstream\src\Http\Livewire\TeamMemberManager.php
 namespace Laravel\Jetstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
@@ -96,7 +97,7 @@ class TeamMemberManager extends Component
         // check if teh user id registered
         $user = User::where('email', $this->addTeamMemberForm['email'])->first();
         if(!$user){
-            $this->addError('addTeamMemberForm.email', 'User must be registered');
+            $this->addError('addTeamMemberForm.email', 'User must be registered. Click on the "Add Member" button to register the user');
             return;
         }
         $this->resetErrorBag();

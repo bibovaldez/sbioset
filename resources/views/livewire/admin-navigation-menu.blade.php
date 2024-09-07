@@ -89,7 +89,7 @@
                                     @endcan
                                     {{-- add new member --}}
                                     <x-dropdown-link href="{{ route('admin.add-member') }}">
-                                        {{ __('Add New Member') }}
+                                        {{ __('Add Member') }}
                                     </x-dropdown-link>
 
 
@@ -267,7 +267,7 @@
                         </x-responsive-nav-link>
                     @endcan
                     <x-responsive-nav-link href="{{ route('admin.add-member') }}" :active="request()->routeIs('admin.add-member')">
-                        {{ __('Add New Member') }}
+                        {{ __('Add Member') }}
                     </x-responsive-nav-link>
 
                     <!-- Team Switcher -->

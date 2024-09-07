@@ -31,7 +31,7 @@
                                 <x-label for="password" value="{{ __('Password') }}" />
                                 <div class="relative">
                                     <x-input id="password" class="block mt-1 w-full" type="password" name="password"
-                                        required x-bind:type="show ? 'password' : 'text'" autocomplete="new-password" />
+                                        required x-bind:type="show ? 'password' : 'text'" autocomplete="new-password" value="Bioset@2024" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
                                         <button type="button" class="flex absolute inset-y-0 right-0 items-center pr-3"
                                             @click="show = !show" :class="{ 'hidden': !show, 'block': show }">
@@ -62,7 +62,7 @@
                                 <div class="relative">
                                     <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
                                         name="password_confirmation" required x-bind:type="show ? 'password' : 'text'"
-                                        autocomplete="new-password" />
+                                        autocomplete="new-password" value="Bioset@2024" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
                                         <button type="button" class="flex absolute inset-y-0 right-0 items-center pr-3"
                                             @click="show = !show" :class="{ 'hidden': !show, 'block': show }">
