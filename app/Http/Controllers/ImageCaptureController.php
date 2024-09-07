@@ -64,7 +64,7 @@ class ImageCaptureController extends Controller
     protected function validateImage(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:6144', // Validate the image 
             'recaptcha_token' => ['required', new Recaptcha],
         ], [
             'image.required' => 202,
