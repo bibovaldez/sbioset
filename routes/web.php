@@ -23,12 +23,8 @@ Route::group(['middleware' => array_merge(
     ['check.not.blocked', 'http.redirect']
 )], function () {
     //  Landing page
-    // Route::get('/', fn() => view('welcome'));
+    Route::get('/', fn() => view('welcome'));
 
-    // crete a rpoute funtion to dispay the dd() example
-    Route::get('/', function () {
-        dd(env('ADMIN_PASSWORD'));
-    });
 
 
     // logout other sessions

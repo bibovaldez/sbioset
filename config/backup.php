@@ -60,7 +60,7 @@ return [
                 'strict' => true,
                 'engine' => null,
                 'dump' => [
-                    'dump_binary_path' => 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin', // Specify the full path to mysqldump here
+                    'dump_binary_path' => env('DUMP_BINARY_PATH', ''),
                     'use_single_transaction' => true,
                 ],
             ],
