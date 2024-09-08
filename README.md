@@ -22,7 +22,7 @@
 
 3. **Install MySQL:**
    ```bash
-   sudo apt install -y mysql-server
+   sudo apt-get install -y mariadb-server 
    ```
 
 4. **Install Composer:**

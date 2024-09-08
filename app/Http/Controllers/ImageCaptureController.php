@@ -53,10 +53,10 @@ class ImageCaptureController extends Controller
                 return response()->json(['message' => 'No predictions found'], 404);
             }
         } catch (ValidationException $e) {
-    
+            Log::error('Image upload failed: ' . $e->getMessage());
             return $this->handleValidationException($e);
         } catch (\Exception $e) {
-  
+            Log::error('Image upload failed: ' . $e->getMessage());
             return response()->json(['error' => 'Image upload failed'], 500);
         }
     }

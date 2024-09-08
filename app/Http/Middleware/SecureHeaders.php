@@ -23,15 +23,19 @@ class SecureHeaders extends SecureHeadersMiddleware
             $response = parent::handle($request, function() use ($response) {
                 return $response;
             });
+             // Update Permissions-Policy header to remove unrecognized features
+             $response->headers->set('Permissions-Policy', 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()');
         } else {
             // If the response is null or invalid, create a new Response instance
             $response = new SymfonyResponse();
             $response->setStatusCode(200); // Default status code
-            $response->setContent(''); // Default content
+            $response->setContent('OK'); // Default content
             // Apply secure headers
             $response = parent::handle($request, function() use ($response) {
                 return $response;
             });
+             // Update Permissions-Policy header to remove unrecognized features
+             $response->headers->set('Permissions-Policy', 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()');
         }
 
         return $response;

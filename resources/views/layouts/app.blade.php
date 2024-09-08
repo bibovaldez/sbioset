@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- meta description --}}
-    <meta http-equiv="Content-Security-Policy" content="
+    {{-- <meta http-equiv="Content-Security-Policy" content=" upgrade-insecure-requests"> --}}
     <meta name="description" content="This system focuses on security of user and data that being processed.">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link  rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" />
