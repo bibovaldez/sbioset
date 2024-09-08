@@ -1,6 +1,6 @@
 <?php
 // change the team invitation controller \BiosecurityTech\vendor\laravel\jetstream\src\Http\Controllers\TeamInvitationController.php
-namespace App\Http\Controllers;
+namespace Laravel\Jetstream\Http\Controllers;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -20,8 +20,6 @@ class TeamInvitationController extends Controller
      */
     public function accept(Request $request, $invitationId)
     {
-
-        // dd($request->user());
         $model = Jetstream::teamInvitationModel();
 
         $invitation = $model::whereKey($invitationId)->firstOrFail();

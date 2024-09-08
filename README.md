@@ -118,6 +118,15 @@
     ```bash
     php artisan key:generate
     ```
+10. ** Move \app\Http\Liveware\TeamMemberManager.php to \vendor\laravel\jetstream\src\Http\Livewire\TeamMemberManager.php
+    ```bash
+    cp app/Http/Livewire/TeamMemberManager.php vendor/laravel/jetstream/src/Http/Livewire/TeamMemberManager.php
+    ```
+11. **Move app\Http\Controllers\TeamInvitationController.php to vendor\laravel\jetstream\src\Http\Controllers\TeamInvitationController.php 
+    ```bash
+    cp app/Http/Controllers/TeamInvitationController.php vendor/laravel/jetstream/src/Http/Controllers/TeamInvitationController.php
+    ```
+    
 
 ## Step 4: Set File Permissions
 
@@ -198,12 +207,12 @@
         ServerAdmin admin@yourdomain.com
         ServerName 192.168.1.132
         DocumentRoot /var/www/html/BiosecurityTech/public
-    
+
         <Directory /var/www/html/BiosecurityTech>
             AllowOverride All
             Require all granted
         </Directory>
-    
+
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
     </VirtualHost>
