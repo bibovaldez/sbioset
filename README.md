@@ -194,19 +194,19 @@
     ```
 2. **Add the following configuration:**
     ```apache
-<VirtualHost *:80>
-    ServerAdmin admin@yourdomain.com
-    ServerName 192.168.1.132
-    DocumentRoot /var/www/html/BiosecurityTech/public
-
-    <Directory /var/www/html/BiosecurityTech>
-        AllowOverride All
-        Require all granted
-    </Directory>
-
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
+    <VirtualHost *:80>
+        ServerAdmin admin@yourdomain.com
+        ServerName 192.168.1.132
+        DocumentRoot /var/www/html/BiosecurityTech/public
+    
+        <Directory /var/www/html/BiosecurityTech>
+            AllowOverride All
+            Require all granted
+        </Directory>
+    
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>
     ```
 3. **Enable the virtual host:**
     ```bash
