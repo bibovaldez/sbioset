@@ -1,66 +1,221 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BiosecurityTech - Laravel Installation on Linux
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Prerequisites
+- PHP (>= 8.0)
+- Composer
+- MySQL
+- Git
+- Apache
 
-## About Laravel
+## Step 1: Update and Install Required Packages
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. **Update the package list and upgrade existing packages:**
+   ```bash
+   sudo apt update && sudo apt upgrade
+    ```
+2. **Install PHP and necessary extensions:**
+    ```bash
+    sudo apt install php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath unzip curl
+     ```
+3. **Install MySQL:**
+    ```bash
+    sudo apt install mysql-server
+    ```
+4. **Install Composer:**
+    ```bash
+    curl -sS https://getcomposer.org/installer | php
+    sudo mv composer.phar /usr/local/bin/composer
+    ```
+5. **Install Git:**
+    ```bash
+    sudo apt install git
+    ```
+6. **Install Apache:**
+    ```bash
+    sudo apt install apache2
+    ```
+7. **Install Node.js and NPM:**
+    ```bash
+    sudo apt install nodejs npm
+    ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Step 2: Configure PHP Settings
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Edit the PHP configuration file:**
+    ```bash
+    sudo nano /etc/php/{version}/cli/php.ini
+    ```
+2. **Update the following settings:**
+    ```ini
+    memory_limit = 512M
+    upload_max_filesize = 100M
+    post_max_size = 100M
+    max_execution_time = 600
+    max_input_time = 600
+    extension=mysqli
+    extension=sodium
+    extension=php_fileinfo.dll
+    extension=pdo_mysql
+    ```
+3. **Restart the PHP service:**
+    ```bash
+    sudo systemctl restart apache2
+    ```
+4. **Check the PHP version:**
+    ```bash
+    php -v
+    ```
+5. **Check the PHP modules:**
+    ```bash
+    php -m
+    ```
+6. **Check the PHP configuration:**
+    ```bash
+    php -i
+    ```
 
-## Learning Laravel
+## Step 3: Clone the GitHub Project
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Navigate to your web root directory:**
+    ```bash
+    cd /var/www/html
+    ```
+2. **Clone the GitHub project:**
+    ```bash
+    sudo git clone https://github.com/bibovaldez/BiosecurityTech.git
+    ```
+3. **Navigate to the project directory:**
+    ```bash
+    cd BiosecurityTech
+    ```
+4. **Install the project dependencies:**
+    ```bash
+    composer install
+    ```
+5. **Install Laravel dependencies using Composer:**
+    ```bash
+    composer install
+    ```
+6. **Copy .env.example to .env:**
+    ```bash
+    cp .env.example .env
+    ```
+7. **Edit the .env file:**
+    ```bash
+    nano .env
+    ```
+8. **Update the following settings:**
+    ```ini
+    DB_CONNECTION=mysql
+    DB_HOST=
+    DB_PORT=
+    DB_DATABASE=
+    DB_USERNAME=
+    DB_PASSWORD=
+    DUMP_BINARY_PATH=/usr/bin
+    ```
+9. **Generate a new application key:**
+    ```bash
+    php artisan key:generate
+    ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Step 4: Set File Permissions
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Change ownership of the project files:**
+    ```bash
+    sudo chown -R www-data:www-data /var/www/html/BiosecurityTech
+    ```
+2. **Change permissions of the project files:**
+    ```bash
+    sudo chmod -R 775 /var/www/html/BiosecurityTech/storage
+    sudo chmod -R 775 /var/www/html/BiosecurityTech/bootstrap/cache
+    ```
 
-## Laravel Sponsors
+## Step 5: Configure the MySQL Database
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Login to MySQL:**
+    ```bash
+    mysql -u root -p
+    ```
+2. **Create a new database:**
+    ```sql
+    CREATE DATABASE biosetdb;
+    ```
+3. **Create a new user:**
+    ```sql
+    CREATE USER 'bioset'@'localhost' IDENTIFIED BY 'bioset@2024';
+    GRANT ALL PRIVILEGES ON biosetdb.* TO 'bioset'@'localhost';
+    FLUSH PRIVILEGES;
+    ```
+4. **Exit MySQL:**
+    ```sql
+    exit
+    ```
 
-### Premium Partners
+## Step 6: Migrate and Seed the Database
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. **Migrate the database:**
+    ```bash
+    php artisan migrate
+    ```
+2. **Seed the database:**
+    ```bash
+    php artisan db:seed
+    ```
+3. **Clear the cache:**
+    ```bash
+    php artisan cache:clear
+    ```
+4. **Optimize the application:**
+    ```bash
+    php artisan optimize
+    ```
 
-## Contributing
+## Step 7: Configure Firewall
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Allow HTTP and HTTPS traffic:**
+    ```bash
+    sudo ufw allow in "Apache Full"
+    ```
+2. **Enable the firewall:**
+    ```bash
+    sudo ufw enable
+    ```
+3. **Check the firewall status:**
+    ```bash
+    sudo ufw status
+    ```
 
-## Code of Conduct
+## Step 8: Set Up Apache Virtual Host
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Create a new Apache virtual host configuration:**
+    ```bash
+    sudo nano /etc/apache2/sites-available/biosecuritytech.conf
+    ```
+2. **Add the following configuration:**
+    ```apache
+<VirtualHost *:80>
+    ServerAdmin admin@yourdomain.com
+    ServerName 192.168.1.132
+    DocumentRoot /var/www/html/BiosecurityTech/public
 
-## Security Vulnerabilities
+    <Directory /var/www/html/BiosecurityTech>
+        AllowOverride All
+        Require all granted
+    </Directory>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+    ```
+3. **Enable the virtual host:**
+    ```bash
+    sudo a2ensite biosecuritytech.conf
+    sudo a2enmod rewrite
+    ```
+4. **Restart the Apache service:**
+    ```bash
+    sudo systemctl restart apache2
+    ```
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
