@@ -1,6 +1,6 @@
 <?php
-// change the team invitation controller \BiosecurityTech\vendor\laravel\jetstream\src\Http\Controllers\TeamInvitationController.php
-namespace Laravel\Jetstream\Http\Controllers;
+// change the team invitation controller 
+namespace App\Http\Controllers;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;

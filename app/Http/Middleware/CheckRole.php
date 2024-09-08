@@ -22,6 +22,7 @@ class CheckRole
         'admin.dashboard',
         'admin.calendar',
         'admin.add-member',
+        'admin.add-member.save',
         'current-team.update',
         'teams.create',
         'teams.show',

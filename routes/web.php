@@ -71,8 +71,8 @@ Route::group(['middleware' => array_merge(
             ->name('admin.calendar');
         Route::get('/admin/addmember', [AddmemberController::class, 'addMember'])
             ->name('admin.add-member');
-        Route::post('/admin/addmember', [RegisteredUserController::class, 'store'])
-            ->name('admin.add-member');
+        Route::post('/admin/addmember/save', [RegisteredUserController::class, 'store'])
+            ->name('admin.add-member.save');
 
         // SUB ADMIN ROUTES
         Route::get('/subadmin/dashboard', [DashboardController::class, 'dashboard'])
