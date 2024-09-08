@@ -50,6 +50,7 @@
 
 1. **Edit the PHP configuration file:**
    ```bash
+    sudo apt install libsodium-dev libsodium23
    sudo nano /etc/php/$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')/apache2/php.ini
    ```
 
