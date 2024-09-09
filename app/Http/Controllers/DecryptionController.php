@@ -17,6 +17,7 @@ class DecryptionController extends Controller
     }
     public function decryptData($ciphertext)
     {
+        // dd($this->key, $this->nonce, $this->additionalData);
         return $this->decompressAndDecode($this->decrypt(base64_decode($ciphertext)));
     }
     protected function decrypt($ciphertext)

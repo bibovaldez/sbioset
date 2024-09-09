@@ -1,7 +1,5 @@
 <?php
 
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-
 return [
 
     /*
@@ -27,8 +25,7 @@ return [
     |
     */
 
-    'route_domain' => null,
-
+    'route_domain' => env('APP_URL') ? parse_url(env('APP_URL'), PHP_URL_HOST) : null,
     /*
     |--------------------------------------------------------------------------
     | Log Viewer Route
@@ -75,7 +72,7 @@ return [
 
     'middleware' => [
         'web',
-        \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
+        'auth',
     ],
 
     /*

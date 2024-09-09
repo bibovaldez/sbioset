@@ -43,7 +43,6 @@ class DashboardService
         if (!$chickenCounter) {
             return $this->getEmptyCountData();
         }
-
         return $this->decryptCountData($chickenCounter);
     }
 

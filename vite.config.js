@@ -12,10 +12,10 @@ export default defineConfig({
         }),
     ],
     // server: {
-    //     host: '192.168.1.71',
+    //     host: '192.168.1.62',
     //     port: 3000,
     //     hmr: {
-    //         host: '192.168.1.71',
+    //         host: '192.168.1.62',
     //         port: 443,
     //     },
     // },

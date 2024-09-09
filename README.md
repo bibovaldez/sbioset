@@ -111,6 +111,16 @@
    npm install
    npm run build
    ```
+9. ** Clear the cache and optimize:**
+   ```bash
+   php artisan config:cache
+   php artisan config:clear
+   php artisan optimize:clear
+   php artisan cache:clear
+   php artisan config:cache
+   php artisan optimize
+   php artisan storage:link
+   ```
 
 ## Step 4: Set File Permissions
 
