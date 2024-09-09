@@ -12,6 +12,8 @@ use App\Http\Controllers\ImageRecognitionController;
 use App\Rules\Recaptcha;
 use App\Http\Controllers\SaveImageResultController;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\ActivityNotification;
+use Illuminate\Support\Facades\Notification;
 
 class ImageCaptureController extends Controller
 {
@@ -42,7 +44,7 @@ class ImageCaptureController extends Controller
             $imageData = $uploadedFile->get(); // Get the image data
 
             $recognitionResult = $this->imageRecognitionController->processImage($uploadedFile); // Process the image
-           
+
             // Check if predictions are found
             if (!empty($recognitionResult['predictions'])) {
                 $this->updateChickenCounter($recognitionResult);
@@ -73,7 +75,7 @@ class ImageCaptureController extends Controller
             'image.max' => 413,
         ]);
     }
-  
+
 
     // Update the chicken counter overall count
     protected function updateChickenCounter($recognitionResult)
@@ -94,5 +96,20 @@ class ImageCaptureController extends Controller
             'user_email' => Auth::user()->email,
             'image_id' => $recognitionResult['inference_id'],
         ]);
+
+        // email notification to admin
+        $subject = 'Image Upload Activity';
+        $message = sprintf(
+            "User Information:\n\n- User ID: %d\n- Name: %s\n- Email: %s\n\nAction:\n\n- Uploaded Image ID: %s\n- Date Uploaded: %s",
+            Auth::id(),
+            Auth::user()->name,
+            Auth::user()->email,
+            $recognitionResult['inference_id'],
+            now()->toDateTimeString()
+        );
+
+
+        Notification::route('mail', env('ADMIN_EMAIL'))
+            ->notify(new ActivityNotification($subject, $message));
     }
 }

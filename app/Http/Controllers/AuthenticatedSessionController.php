@@ -25,6 +25,8 @@ use App\Actions\CheckAccountHasTeam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\ActivityNotification;
+use Illuminate\Support\Facades\Notification;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -149,5 +151,15 @@ class AuthenticatedSessionController extends Controller
     public function Log_activity($email, $ip)
     {
         Log::info("User with email: $email and IP: $ip has performed a successful login.");
+        // notify admin about the login
+        $subject = "User Login";
+        $message = sprintf(
+            "User Activity Report:\n\n- Email: %s\n- IP Address: %s\n- Status: Successful Login\n- Timestamp: %s",
+            $email,
+            $ip,
+            now()->toDateTimeString()
+        );
+        Notification::route('mail', env('ADMIN_EMAIL'))
+            ->notify(new ActivityNotification($subject, $message));
     }
 }
