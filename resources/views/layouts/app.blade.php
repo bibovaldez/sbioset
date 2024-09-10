@@ -49,6 +49,7 @@
 
     @stack('modals')
     @stack('scripts')
+    @stack('captured_image')
     @livewireScripts
 </body>
 
