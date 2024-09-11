@@ -103,6 +103,47 @@
         let isUploading = false;
         const isMobileDevice = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
             navigator.userAgent);
+
+        async function compressImage(file, maxWidth = 1024, maxHeight = 1024, quality = 0.8) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            }));
+                        }, 'image/jpeg', quality);
+                    };
+                };
+            });
+        }
+
         async function toggleCamera(action) {
             if (action === "start") {
                 elements.imagePreviewContainer.classList.add("hidden");
@@ -134,29 +175,36 @@
             elements.canvas.height = elements.video.videoHeight;
             context.drawImage(elements.video, 0, 0, elements.canvas.width, elements.canvas.height);
 
-            elements.canvas.toBlob(function(blob) {
-                const file = new File([blob], "captured_image.png", {
-                    type: "image/png",
+            elements.canvas.toBlob(async function(blob) {
+                const file = new File([blob], "captured_image.jpg", {
+                    type: "image/jpeg",
                 });
+                const optimizedFile = await compressImage(file);
                 const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
+                dataTransfer.items.add(optimizedFile);
                 elements.fileInput.files = dataTransfer.files;
-                elements.preview.src = URL.createObjectURL(file);
+                elements.preview.src = URL.createObjectURL(optimizedFile);
                 showImagePreview();
                 toggleCamera("stop");
-            }, "image/png");
+            }, 'image/jpeg');
         }
 
-        function previewImage(event) {
+        async function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
+                const optimizedFile = await compressImage(file);
                 const reader = new FileReader();
                 reader.onload = () => {
                     elements.preview.src = reader.result;
                     showImagePreview();
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(optimizedFile);
                 elements.rechooseButton.classList.remove("hidden");
+
+                // Replace the original file with the optimized one
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(optimizedFile);
+                elements.fileInput.files = dataTransfer.files;
             }
         }
 
@@ -176,7 +224,6 @@
             userClicked = false;
         }
 
-
         async function handleFormSubmit(event) {
             event.preventDefault();
             if (isUploading) return;
@@ -189,11 +236,12 @@
                     document.getElementById("recaptcha_token").value = token;
                     const formData = new FormData(elements.form);
                     const originalImage = formData.get("image");
+
                     const fileSize = originalImage.size >= 1048576 ?
                         `${(originalImage.size / 1048576).toFixed(2)} MB` :
                         `${(originalImage.size / 1024).toFixed(2)} KB`;
-                        // if image size is greater than 6MB show upload status as 413
-                    if (originalImage.size > 6291456) {
+                    // if image size is greater than 10MB show upload status as 413
+                    if (originalImage.size > 10485760) {
                         const {
                             icon,
                             text,
@@ -206,6 +254,7 @@
                         cancelImage();
                         return;
                     }
+
 
                     const xhr = new XMLHttpRequest();
                     xhr.open("POST", elements.form.action, true);
