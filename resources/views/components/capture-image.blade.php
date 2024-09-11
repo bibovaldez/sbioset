@@ -192,6 +192,20 @@
                     const fileSize = originalImage.size >= 1048576 ?
                         `${(originalImage.size / 1048576).toFixed(2)} MB` :
                         `${(originalImage.size / 1024).toFixed(2)} KB`;
+                        // if image size is greater than 6MB show upload status as 413
+                    if (originalImage.size > 6291456) {
+                        const {
+                            icon,
+                            text,
+                            color
+                        } = getUploadStatus(413);
+                        displayUploadResult(icon, text, color, fileSize);
+                        showAlert("Warning", "The file is too large, please try again", "warning");
+                        isUploading = false;
+                        // reset evrything
+                        cancelImage();
+                        return;
+                    }
 
                     const xhr = new XMLHttpRequest();
                     xhr.open("POST", elements.form.action, true);

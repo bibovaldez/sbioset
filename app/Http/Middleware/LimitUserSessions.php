@@ -16,14 +16,12 @@ class LimitUserSessions
 
     public function handle(Request $request, Closure $next)
     {
+        // dd('LimitUserSessions middleware executed');
         if (Auth::check()) {
             // Get all sessions for the user with the same device identifier
             $sessions = DB::table('sessions')
                 ->where('user_id', Auth::id())
-                ->where('user_agent', $request->userAgent())
-                ->where('ip_address', $request->ip())
                 ->get();
-
             // Check if the user has more than the allowed number of sessions for this device
             if ($sessions->count() > $this->maxSessions) {
                 

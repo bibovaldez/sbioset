@@ -15,9 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // global middleware
-        // $middleware->use([
-        //     \Spatie\Honeypot\ProtectAgainstSpam::class,
-        // ]);
+        $middleware->use([
+            \App\Http\Middleware\LimitUserSessions::class,
+        ]);
 
         $middleware->alias([
             'honeypot' => \Spatie\Honeypot\ProtectAgainstSpam::class,
