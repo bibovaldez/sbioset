@@ -5,14 +5,17 @@ namespace App\Services;
 use Carbon\Carbon;
 use App\Models\CalendarData;
 use App\Http\Controllers\DecryptionController;
+use Illuminate\Support\Facades\Auth;
 
 class CalendarDataService
 {
     protected $decryptionController;
+    protected $user;
 
     public function __construct(DecryptionController $decryptionController)
     {
         $this->decryptionController = $decryptionController;
+        $this->user = Auth::user();
     }
 
     public function getMonthData($year, $month)
@@ -43,8 +46,11 @@ class CalendarDataService
 
     protected function getEventsForMonth($startOfMonth, $endOfMonth)
     {
-        $calendarData = CalendarData::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
+        $team = $this->user->current_team_id;
 
+        $calendarData = CalendarData::where('team_id', $team)
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->get();
         $events = [];
         foreach ($calendarData as $data) {
             $events[] = [
