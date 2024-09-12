@@ -36,7 +36,7 @@
                         <table class="w-full border-collapse">
                             <thead>
                                 <tr class="text-center bg-gray-100 dark:bg-gray-700">
-                                    @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day)
+                                    @foreach (['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
                                         <th class="border border-gray-200 dark:border-gray-600 py-2 px-1 text-sm font-medium {{ $day === 'Sun' ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300' }}">
                                             {{ $day }}
                                         </th>
