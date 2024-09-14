@@ -69,7 +69,6 @@ class EncryptionController extends Controller
             }
         }
     }
-
     private function nonLinearTransform(string $input): string
     {
         $output = '';
