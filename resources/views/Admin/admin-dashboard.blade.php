@@ -22,6 +22,7 @@
                                     'title' => 'Unknown Chicken',
                                     'value' => $dashboardData['overallData']['total_unknown_chicken'],
                                 ],
+                                
                             ];
                         @endphp
 
@@ -50,8 +51,6 @@
                             <canvas id="dailyDataChart"></canvas>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </main>
@@ -68,11 +67,10 @@
         const monthlyDataChart = new Chart(ctxMonthly, {
             type: 'bar',
             data: {
-                labels: ['Total Chicken', 'Healthy Chicken', 'Unhealthy Chicken', 'Unknown Chicken'],
+                labels: ['Healthy Chicken', 'Unhealthy Chicken', 'Unknown Chicken'],
                 datasets: [{
                     label: 'Monthly Data',
                     data: [
-                        monthlyData.total_chicken,
                         monthlyData.total_healthy_chicken,
                         monthlyData.total_unhealthy_chicken,
                         monthlyData.total_unknown_chicken
@@ -116,11 +114,10 @@
         const dailyDataChart = new Chart(ctxDaily, {
             type: 'bar',
             data: {
-                labels: ['Total Chicken', 'Healthy Chicken', 'Unhealthy Chicken', 'Unknown Chicken'],
+                labels: ['Healthy Chicken', 'Unhealthy Chicken', 'Unknown Chicken'],
                 datasets: [{
                     label: 'Daily Data',
                     data: [
-                        dailyData.total_chicken,
                         dailyData.total_healthy_chicken,
                         dailyData.total_unhealthy_chicken,
                         dailyData.total_unknown_chicken

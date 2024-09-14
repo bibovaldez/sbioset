@@ -11,4 +11,5 @@
 {{ config('app.name') }}
 
 {{ __('If you’re having trouble clicking the "Logout from other sessions" button, copy and paste the URL below into your web browser:') }}
-[{{ $logoutLink }}]({{ $logoutLink }})
+
+{{ $logoutLink }}

@@ -6,7 +6,7 @@
 
         <x-validation-errors class="mb-4" />
         {{-- Error response --}}
-        @session('error')
+        @if (session('error'))
             @push('scripts')
                 <script>
                     Swal.fire({
@@ -21,19 +21,18 @@
                     });
                 </script>
             @endpush
-        @endsession
+        @endif
         {{-- Login response --}}
-        @session('status')
+        @if (session('status'))
             <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
+                {{ session('status') }}
             </div>
-        @endsession
+        @endif
 
         <form method="POST" action="{{ isset($guard) ? url($guard . '/login') : route('login') }}" id="loginForm">
             @csrf
             @honeypot
             <input type="hidden" class="g-recaptcha" name="recaptcha_token" id="recaptcha_token">
-
 
             <div>
                 <x-label for="email" value="{{ __('Email') }}" />
@@ -100,8 +99,20 @@
             grecaptcha.ready(function() {
                 document.getElementById('loginForm').addEventListener("submit", function(event) {
                     event.preventDefault();
+
+                    Swal.fire({
+                        title: 'Verifying User',
+                        text: 'Please do close or refresh this window. Thank you!',
+                        imageUrl: '{{ asset('images/loading.gif') }}',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
                     grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {
-                            action: 'register'
+                            action: 'login'
                         })
                         .then(function(token) {
                             document.getElementById("recaptcha_token").value = token;

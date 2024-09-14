@@ -276,27 +276,22 @@
 
         function updateProgress(event) {
             setUIState(true);
-
             const {
                 loaded,
                 total
             } = event;
             const fileLoaded = Math.floor((loaded / total) * 100);
-
             // Select the modal wrapper and progress area
             const progressAreaWrapper = document.getElementById("progress-area-wrapper");
             const progressArea = document.getElementById("progress-area");
-
             // Show the modal by removing "hidden" class
             progressAreaWrapper.style.display = 'flex';
-
             // Update the progress area content
             progressArea.innerHTML = `
                     <div class="text-lg font-semibold mb-4">Uploading... ${fileLoaded}%</div>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${fileLoaded}%;"></div>
                     </div>`;
-
             // Hide the modal once upload is complete (100%)
             if (fileLoaded === 100) {
                 setTimeout(() => {
@@ -306,12 +301,11 @@
                 Swal.fire({
                     title: 'Detecting Chicken',
                     text: 'Please wait while we detect the chicken status',
-                    icon: 'info',
+                    imageUrl: '{{ asset('images/loading.gif') }}',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 });
-
             }
         }
 
@@ -320,10 +314,6 @@
                 elements.progressArea.innerHTML = "";
                 setUIState(false);
                 isUploading = false;
-
-                console.log("Server Response:", xhr.responseText); // Debugging log
-                console.log("Status Code:", xhr.status); // Debugging log
-
                 const {
                     icon,
                     text,
