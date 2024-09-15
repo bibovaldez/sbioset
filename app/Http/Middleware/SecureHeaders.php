@@ -24,7 +24,7 @@ class SecureHeaders extends SecureHeadersMiddleware
                 return $response;
             });
              // Update Permissions-Policy header to remove unrecognized features
-             $response->headers->set('Permissions-Policy', 'accelerometer=(), camera=*, geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()');
+             $response->headers->set('Permissions-Policy', 'camera=*');
             } else {
             // If the response is null or invalid, create a new Response instance
             $response = new SymfonyResponse();
@@ -35,7 +35,7 @@ class SecureHeaders extends SecureHeadersMiddleware
                 return $response;
             });
              // Update Permissions-Policy header to remove unrecognized features
-             $response->headers->set('Permissions-Policy', 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()');
+             $response->headers->set('Permissions-Policy', 'camera=()');
         }
 
         return $response;

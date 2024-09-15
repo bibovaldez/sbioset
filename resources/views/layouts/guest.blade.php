@@ -31,7 +31,7 @@
     </div>
 
     <!-- Digital Clock -->
-    <div id="digital-clock" class="fixed bottom-0 left-0 m-4 text-gray-900"></div>
+    <div id="digital-clock" class="fixed bottom-0 left-0 m-4 text-gray-900 dark:text-gray-100"></div>
 
     @stack('scripts')
     @livewireScripts

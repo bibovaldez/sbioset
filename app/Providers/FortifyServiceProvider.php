@@ -30,7 +30,7 @@ class FortifyServiceProvider extends ServiceProvider
 {
     protected $failedLoginThreshold = 3; // 3 failed login attempts
     protected $failedLoginDecayMinutes = 5; // 5 minutes lockout
-    protected $systemAttackThreshold = 3; // Increased from 3 to 10
+    protected $systemAttackThreshold = 10; // Increased from 3 to 10
     protected $blockDurationHours = 48; // Increased from 24 to 48 hours
     protected $passwordExpirationDays = 30; // New: Password expiration after 30 days
 
@@ -47,7 +47,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         $this->configureRateLimiting();
-        
+
 
         $this->schedulePasswordExpirationCheck();
     }
@@ -77,8 +77,6 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(3)->by($request->session()->get('login.id'));
         });
     }
-
-
     protected function schedulePasswordExpirationCheck(): void
     {
         // Schedule a daily job to check for expired passwords
@@ -96,11 +94,33 @@ class FortifyServiceProvider extends ServiceProvider
         return BlockedEntity::isBlocked($email, $ip) || $this->isSuspiciousActivity($email, $ip);
     }
 
+
     protected function isSuspiciousActivity($email, $ip): bool
     {
-        //  check for multiple failed attempts from different IPs for the same email
-        $recentAttempts = Cache::get("recent_attempts:{$email}", 0);
-        return $recentAttempts > $this->systemAttackThreshold;
+        // Check for multiple failed attempts from different IPs for the same email
+        $recentEmailAttempts = Cache::get("recent_attempts:{$email}", 0);
+
+        // Check for multiple failed attempts from the same IP for different emails
+        $recentIpAttempts = Cache::get("recent_ip_attempts:{$ip}", 0);
+
+        // Check for rapid login attempts from the same IP
+        $recentIpTimestamps = Cache::get("recent_ip_timestamps:{$ip}", []);
+        $recentIpTimestamps[] = now();
+        Cache::put("recent_ip_timestamps:{$ip}", $recentIpTimestamps, now()->addMinutes(5));
+
+        $emailThreshold = $this->systemAttackThreshold;
+        $ipThreshold = 5; //  threshold for IP-based attempts
+        $rapidAttemptThreshold = 10; //  threshold for rapid attempts
+        $rapidAttemptTimeFrame = 60; // Time frame in seconds
+
+        // Check if any threshold is exceeded
+        $isEmailSuspicious = $recentEmailAttempts > $emailThreshold;
+        $isIpSuspicious = $recentIpAttempts > $ipThreshold;
+        $isRapidAttemptSuspicious = count(array_filter($recentIpTimestamps, function ($timestamp) use ($rapidAttemptTimeFrame) {
+            return $timestamp->diffInSeconds(now()) <= $rapidAttemptTimeFrame;
+        })) > $rapidAttemptThreshold;
+
+        return $isEmailSuspicious || $isIpSuspicious || $isRapidAttemptSuspicious;
     }
 
     protected function generateThrottleKey($email, $ip): string
@@ -124,7 +144,7 @@ class FortifyServiceProvider extends ServiceProvider
         $recentAttempts = Cache::get("recent_attempts:{$email}", 0) + 1;
         Cache::put("recent_attempts:{$email}", $recentAttempts, now()->addHours(1));
     }
-
+    // New: Notify admin of max login attempts
     protected function notifyAdminOfMaxLoginAttempts(string $email, string $ip): void
     {
         $adminEmail = config('mail.admin_email');
@@ -156,18 +176,23 @@ class FortifyServiceProvider extends ServiceProvider
             ->notify(new SystemUnderAttack());
     }
 
-    protected function implementSecurityMeasures(): void
+    protected function implementSecurityMeasures(): void // Implement additional security measures
     {
         Auth::guard('web')->logout();
         Artisan::call('backup:run');
         $this->emailUsersToUpdatePassword();
+
+        // log this activity
+        Log::info('System under attack. Additional security measures implemented.');
+
+
         // Consider additional measures like temporarily disabling new user registrations
 
-        $mysqldumpPath = shell_exec('which mysqldump'); // Check if mysqldump is found
-        Log::info('mysqldump path: ' . $mysqldumpPath); // Log it to check
+        // $mysqldumpPath = shell_exec('which mysqldump'); // Check if mysqldump is found
+        // Log::info('mysqldump path: ' . $mysqldumpPath); // Log it to check
     }
 
-    protected function emailUsersToUpdatePassword(): void
+    protected function emailUsersToUpdatePassword(): void // Email users to update password
     {
         User::chunk(100, function ($users) {
             foreach ($users as $user) {
@@ -180,10 +205,10 @@ class FortifyServiceProvider extends ServiceProvider
         });
     }
 
-    protected function blockResponse()
+    protected function blockResponse() //  Block response
     {
         $message = __('Access denied. Your Email address has been blocked.');
-            abort(403, $message);
+        abort(403, $message);
     }
 
     protected function tooManyAttemptsResponse()
@@ -192,12 +217,12 @@ class FortifyServiceProvider extends ServiceProvider
             ->with('error', 'Too many login attempts. Please try again later or contact support if you believe this is an error.');
     }
 
-    protected function LogSuspiciousActivity($email, $ip)
+    protected function LogSuspiciousActivity($email, $ip): void // New: Log suspicious activity
     {
         Log::warning("Login activity detected for email: {$email} and IP: {$ip}");
     }
 
-    protected function LogSinactivity($email, $ip)
+    protected function LogSinactivity($email, $ip): void // New: Log Login activity
     {
         Log::info("Login activity detected for email: {$email} and IP: {$ip}");
     }
