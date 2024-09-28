@@ -50,6 +50,7 @@ Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMi
         // Super Admin Routes
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+            Route::get('/dashboard-poultry', [DashboardController::class, 'dashboardPoultry'])->name('dashboard-poultry');
             Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
             Route::get('/addmember', [AddmemberController::class, 'addMember'])->name('add-member');
             Route::post('/addmember/save', [RegisteredUserController::class, 'store'])->name('add-member.save');
@@ -88,3 +89,13 @@ Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMi
         });
     }
 });
+
+// admin.dashboard-poultry
+// admin.dashboard-piggery
+// admin.dashboard-feeds
+// admin.dashboard-medicine
+
+
+Route::get('admin/dashboard-piggery', [DashboardController::class, 'dashboardPiggery'])->name('admin.dashboard-piggery');
+Route::get('admin/dashboard-feeds', [DashboardController::class, 'dashboardFeeds'])->name('admin.dashboard-feeds');
+Route::get('admin/dashboard-medicine', [DashboardController::class, 'dashboardMedicine'])->name('admin.dashboard-medicine');

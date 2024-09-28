@@ -22,6 +22,16 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     @livewireStyles
+    @php
+        use App\Models\Team;
+        $user = Auth::user();
+        $team = Team::find($user->current_team_id);
+        $role = $user->isAdmin()
+            ? 'admin'
+            : ($user->isUser() && $user->hasTeamRole($team, 'admin')
+                ? 'sub-admin'
+                : 'user');
+    @endphp
 
     <style>
         /* Custom scrollbar styles for WebKit browsers */
@@ -54,45 +64,37 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        @php
-            use App\Models\Team;
-            $user = Auth::user();
-            $team = Team::find($user->current_team_id);
-            $role = $user->isAdmin()
-                ? 'admin'
-                : ($user->isUser() && $user->hasTeamRole($team, 'admin')
-                    ? 'sub-admin'
-                    : 'user');
-        @endphp
-        @livewire("{$role}-navigation-menu")
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
+        <!-- Header -->
+
+
+        <!-- Main Content Area -->
+        <div class="flex flex-1 flex-col lg:flex-row">
+            <!-- Navigation Menu -->
+            <aside
+                class="hidden lg:block lg:w-45 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700">
+                @livewire("{$role}-navigation-menu")
+            </aside>
+
+            <!-- Page Content -->
+            <div class="flex flex-col w-full">
+                <!-- Header -->
+                <header class="w-full">
+                    @livewire('header')
+                </header>
+
+                <!-- Main Content -->
+                <main class="flex-1 p-2">
+                    {{ $slot }}
+                </main>
+            </div>
+        </div>
     </div>
 
     @stack('modals')
     @stack('scripts')
     @stack('captured_image')
-    @livewireScripts
-    <!-- Digital Clock -->
-    <div id="digital-clock" class="fixed bottom-0 left-0 m-4 text-gray-900 dark:text-gray-100"></div>
-    <script>
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
-            document.getElementById('digital-clock').textContent = timeString;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock(); // Initial call to display clock immediately
-    </script>
+    @livewireScripts  
 </body>
 
 </html>

@@ -45,7 +45,6 @@ class DashboardService
         }
         return $this->decryptCountData($chickenCounter);
     }
-
     protected function getMonthlyData()
     {
         $team = $this->user->current_team_id;
@@ -54,14 +53,12 @@ class DashboardService
 
         return $this->getAggregatedData($startOfMonth, $endOfMonth, $team);
     }
-
     protected function getDailyData()
     {
         $today = Carbon::today();
         $team = $this->user->current_team_id;
         return $this->getAggregatedData($today, $today->copy()->endOfDay(), $team);
     }
-
     protected function getAggregatedData($startDate, $endDate, $team)
     {
         $calendarData = CalendarData::whereBetween('created_at', [$startDate, $endDate])->where('team_id', $team)->get();
@@ -77,7 +74,6 @@ class DashboardService
 
         return $aggregatedData;
     }
-
     protected function decryptCountData($data)
     {
         return [
@@ -87,7 +83,6 @@ class DashboardService
             'total_unknown_chicken' => $this->decryptionController->decryptData($data->total_unknown_chicken),
         ];
     }
-
     protected function getEmptyCountData()
     {
         return [
@@ -96,5 +91,14 @@ class DashboardService
             'total_unhealthy_chicken' => 0,
             'total_unknown_chicken' => 0,
         ];
+    }
+
+    public function getRecentUploads()
+    {
+        $team = $this->user->current_team_id;
+        $recentUploads = CalendarData::where('team_id', $team)->orderBy('created_at', 'desc')->limit(5)->get();
+
+        dd($recentUploads);
+        return $recentUploads;
     }
 }

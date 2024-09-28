@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\Artisan;
 class CheckRole
 {
     private const ROLE_ROUTES = [
-        'admin' => 'admin.dashboard',
-        'sub-admin' => 'admin.dashboard',
+        'admin' => 'admin.dashboard-poultry',
+        'sub-admin' => 'admin.dashboard-poultry',
         'user' => 'dashboard'
     ];
 
     private const ADMIN_ALLOWED_ROUTES = [
-        'admin.dashboard',
+        'admin.dashboard-poultry',
         'admin.calendar',
         'admin.add-member',
         'admin.add-member.save',
@@ -30,7 +30,7 @@ class CheckRole
         'dashboard'
     ];
     private const SUBADMIN_ALLOWED_ROUTES = [
-        'admin.dashboard',
+        'admin.dashboard-poultry',
         'admin.calendar',
         'image.upload',
         'dashboard'

@@ -100,7 +100,7 @@
                     </svg>
                 </button>
                 @auth
-                    <a href="{{ url('/dashboard') }}"
+                    <a href="{{ url('/admin/dashboard-poultry') }}"
                         class="rounded-md px-3 py-2 text-xl text-indigo-600 dark:text-indigo-400 ring-1 font-semibold ring-transparent transition hover:text-black/70 dark:hover:text-white/80 focus:outline-none focus-visible:ring-[#FF2D20] dark:focus-visible:ring-white">
                         Dashboard
                     </a>

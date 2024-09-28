@@ -14,11 +14,32 @@ class DashboardController extends Controller
     {
         $this->dashboardService = $dashboardService;
     }
-
-    public function dashboard(Request $request)
+    public function dashboardPoultry(Request $request)
     {
         $dashboardData = $this->dashboardService->getDashboardData();
-      
-        return view('Admin.admin-dashboard', compact('dashboardData'));
+        $recentUploads = $this->dashboardService->getRecentUploads();
+            dd($recentUploads[0]);
+        return view('Admin.admin-dashboard-poultry', compact('dashboardData'));
+    }
+
+    public function dashboardPiggery(Request $request)
+    {
+        $dashboardData = $this->dashboardService->getDashboardData();
+
+        return view('Admin.admin-dashboard-piggery', compact('dashboardData'));
+    }
+
+    public function dashboardFeeds(Request $request)
+    {
+        $dashboardData = $this->dashboardService->getDashboardData();
+
+        return view('Admin.admin-dashboard-feeds', compact('dashboardData'));
+    }
+    // dashboardMedicine
+    public function dashboardMedicine(Request $request)
+    {
+        $dashboardData = $this->dashboardService->getDashboardData();
+
+        return view('Admin.admin-dashboard-medicine', compact('dashboardData'));
     }
 }
