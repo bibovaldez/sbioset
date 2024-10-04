@@ -1,117 +1,42 @@
-# BiosecurityTech - Laravel Installation on Linux (Updated)
+# BiosecurityTech - Laravel Installation on Hostinger (Updated)
 
 ## Prerequisites
 - PHP (>= 8.1)
 - Composer
 - MySQL
 - Git
-- Apache
 - Node.js and NPM
 
-## Step 1: Update and Install Required Packages
+## Step 1: Install Project Dependencies
 
-1. **Update the package list and upgrade existing packages:**
+1. **Install Composer dependencies:**
    ```bash
-   sudo apt update && sudo apt upgrade -y
+   php ~/composer.phar install
    ```
 
-2. **Install PHP and necessary extensions:**
-   ```bash
-   sudo apt install -y php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-bcmath unzip
-   ```
-
-3. **Install MySQL:**
-   ```bash
-   sudo apt-get install -y mariadb-server 
-   ```
-
-4. **Install Composer:**
-   ```bash
-   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-   ```
-
-5. **Install Git:**
-   ```bash
-   sudo apt install -y git
-   ```
-
-6. **Install Apache:**
-   ```bash
-   sudo apt install -y apache2
-   ```
-
-7. **Install Node.js and NPM:**
-   ```bash
-   curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-   sudo apt install -y nodejs
-   ```
-
-## Step 2: Configure PHP Settings
-
-1. **Edit the PHP configuration file:**
-   ```bash
-    sudo apt install libsodium-dev libsodium23
-   sudo nano /etc/php/$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')/apache2/php.ini
-   ```
-
-2. **Update the following settings:**
-   ```ini
-   memory_limit = 512M
-   upload_max_filesize = 100M
-   post_max_size = 100M
-   max_execution_time = 600
-   max_input_time = 600
-   ```
-
-3. **Restart the Apache service:**
-   ```bash
-   sudo systemctl restart apache2
-   ```
-
-## Step 3: Clone the GitHub Project
-
-1. **Navigate to your web root directory:**
-   ```bash
-   cd /var/www/html
-   ```
-
-2. **Clone the GitHub project:**
-   ```bash
-   sudo git clone https://github.com/bibovaldez/BiosecurityTech.git
-   ```
-
-3. **Navigate to the project directory:**
-   ```bash
-   cd BiosecurityTech
-   ```
-
-4. **Install the project dependencies:**
-   ```bash
-   composer install
-   ```
-
-5. **Copy .env.example to .env:**
+2. **Copy .env.example to .env:**
    ```bash
    cp .env.example .env
    ```
 
-6. **Generate a new application key:**
+3. **Generate a new application key:**
    ```bash
    php artisan key:generate
    ```
 
-7. **Edit the .env file:**
+4. **Edit the .env file:**
    ```bash
    nano .env
    ```
    Update the database settings and other necessary configurations.
 
-8. **Install NPM dependencies and compile assets:**
+5. **Install NPM dependencies and compile assets:**
    ```bash
    npm install
    npm run build
    ```
-9. ** Clear the cache and optimize:**
+
+6. **Clear the cache and optimize:**
    ```bash
    php artisan config:cache
    php artisan config:clear
@@ -122,32 +47,27 @@
    php artisan storage:link
    ```
 
-## Step 4: Set File Permissions
+## Step 2: Set File Permissions
 
 1. **Change ownership of the project files:**
    ```bash
-   sudo chown -R www-data:www-data /var/www/html/BiosecurityTech
+   sudo chown -R www-data:www-data /path/to/your/project
    ```
 
 2. **Change permissions of the project files:**
    ```bash
-   sudo chmod -R 775 /var/www/html/BiosecurityTech/storage
-   sudo chmod -R 775 /var/www/html/BiosecurityTech/bootstrap/cache
+   sudo chmod -R 775 /path/to/your/project/storage
+   sudo chmod -R 775 /path/to/your/project/bootstrap/cache
    ```
 
-## Step 5: Configure the MySQL Database
+## Step 3: Configure the MySQL Database
 
-1. **Secure MySQL installation:**
+1. **Login to MySQL:**
    ```bash
-   sudo mysql_secure_installation
+   mysql -u your_username -p
    ```
 
-2. **Login to MySQL:**
-   ```bash
-   sudo mysql
-   ```
-
-3. **Create a new database and user:**
+2. **Create a new database and user:**
    ```sql
    CREATE DATABASE biosetdb;
    CREATE USER 'bioset'@'localhost' IDENTIFIED BY 'bioset@2024';
@@ -156,7 +76,7 @@
    EXIT;
    ```
 
-## Step 6: Migrate and Seed the Database
+## Step 4: Migrate and Seed the Database
 
 1. **Migrate the database:**
    ```bash
@@ -174,47 +94,19 @@
    php artisan optimize
    ```
 
-## Step 7: Configure Apache Virtual Host
+## Step 5: Create Symbolic Link
 
-1. **Create a new Apache virtual host configuration:**
+1. **Create a symbolic link from [`public/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2FC%3A%2Fbisoet%2FBiosecurityTech%2Fpublic%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "c:\bisoet\BiosecurityTech\public\") to `public_html`:**
    ```bash
-   sudo nano /etc/apache2/sites-available/biosecuritytech.conf
+   ln -s /path/to/your/project/public /path/to/your/project/public_html
    ```
 
-2. **Add the following configuration:**
-   ```apache
-   <VirtualHost *:80>
-       ServerAdmin admin@yourdomain.com
-       ServerName yourdomain.com
-       DocumentRoot /var/www/html/BiosecurityTech/public
-
-       <Directory /var/www/html/BiosecurityTech>
-           AllowOverride All
-           Require all granted
-       </Directory>
-
-       ErrorLog ${APACHE_LOG_DIR}/error.log
-       CustomLog ${APACHE_LOG_DIR}/access.log combined
-   </VirtualHost>
-   ```
-
-3. **Enable the virtual host and rewrite module:**
-   ```bash
-   sudo a2ensite biosecuritytech.conf
-   sudo a2enmod rewrite
-   ```
-
-4. **Restart the Apache service:**
-   ```bash
-   sudo systemctl restart apache2
-   ```
-
-## Step 8: Final Steps
+## Step 6: Final Steps
 
 1. **Set up scheduled tasks:**
-   Add the following to your crontab (`sudo crontab -e`):
+   Add the following to your crontab ([`crontab -e`](command:_github.copilot.openSymbolFromReferences?%5B%22crontab%20-e%22%2C%5B%7B%22uri%22%3A%7B%22%24mid%22%3A1%2C%22fsPath%22%3A%22c%3A%5C%5Cbisoet%5C%5CBiosecurityTech%5C%5CREADME.md%22%2C%22_sep%22%3A1%2C%22external%22%3A%22file%3A%2F%2F%2Fc%253A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22path%22%3A%22%2FC%3A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22scheme%22%3A%22file%22%7D%2C%22pos%22%3A%7B%22line%22%3A214%2C%22character%22%3A29%7D%7D%5D%5D "Go to definition")):
    ```
-   * * * * * cd /var/www/html/BiosecurityTech && php artisan schedule:run >> /dev/null 2>&1
+   * * * * * cd /path/to/your/project && php artisan schedule:run >> /dev/null 2>&1
    ```
 
 2. **Configure queue worker (if needed):**
@@ -225,13 +117,13 @@
    ```
    [program:laravel-worker]
    process_name=%(program_name)s_%(process_num)02d
-   command=php /var/www/html/BiosecurityTech/artisan queue:work
+   command=php /path/to/your/project/artisan queue:work
    autostart=true
    autorestart=true
    user=www-data
    numprocs=8
    redirect_stderr=true
-   stdout_logfile=/var/www/html/BiosecurityTech/worker.log
+   stdout_logfile=/path/to/your/project/worker.log
    ```
    Then run:
    ```bash
@@ -248,8 +140,8 @@
    ```
 
 4. **Final checks:**
-   - Ensure all services are running: Apache, MySQL, PHP-FPM
-   - Check Laravel logs for any errors: `tail -f /var/www/html/BiosecurityTech/storage/logs/laravel.log`
+   - Ensure all services are running: PHP, MySQL
+   - Check Laravel logs for any errors: [`tail -f /path/to/your/project/storage/logs/laravel.log`](command:_github.copilot.openSymbolFromReferences?%5B%22tail%20-f%20%2Fpath%2Fto%2Fyour%2Fproject%2Fstorage%2Flogs%2Flaravel.log%22%2C%5B%7B%22uri%22%3A%7B%22%24mid%22%3A1%2C%22fsPath%22%3A%22c%3A%5C%5Cbisoet%5C%5CBiosecurityTech%5C%5CREADME.md%22%2C%22_sep%22%3A1%2C%22external%22%3A%22file%3A%2F%2F%2Fc%253A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22path%22%3A%22%2FC%3A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22scheme%22%3A%22file%22%7D%2C%22pos%22%3A%7B%22line%22%3A251%2C%22character%22%3A41%7D%7D%5D%5D "Go to definition")
    - Test the application in a web browser
 
-Remember to replace `yourdomain.com` with your actual domain or server IP address where appropriate.
+Remember to replace `/path/to/your/project` with the actual path to your project and [`yourdomain.com`](command:_github.copilot.openSymbolFromReferences?%5B%22yourdomain.com%22%2C%5B%7B%22uri%22%3A%7B%22%24mid%22%3A1%2C%22fsPath%22%3A%22c%3A%5C%5Cbisoet%5C%5CBiosecurityTech%5C%5CREADME.md%22%2C%22_sep%22%3A1%2C%22external%22%3A%22file%3A%2F%2F%2Fc%253A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22path%22%3A%22%2FC%3A%2Fbisoet%2FBiosecurityTech%2FREADME.md%22%2C%22scheme%22%3A%22file%22%7D%2C%22pos%22%3A%7B%22line%22%3A186%2C%22character%22%3A25%7D%7D%5D%5D "Go to definition") with your actual domain or server IP address where appropriate.
