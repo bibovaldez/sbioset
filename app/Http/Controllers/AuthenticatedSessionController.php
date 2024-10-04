@@ -159,7 +159,7 @@ class AuthenticatedSessionController extends Controller
             $ip,
             now()->toDateTimeString()
         );
-        Notification::route('mail', env('ADMIN_EMAIL'))
+        Notification::route('mail', config('custom.admin.email'))
             ->notify(new ActivityNotification($subject, $message));
     }
 }

@@ -65,6 +65,7 @@ class ImageCaptureController extends Controller
 
     protected function validateImage(Request $request)
     {
+        // Validate the image
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:6144', // Validate the image 
             'recaptcha_token' => ['required', new Recaptcha],
@@ -109,7 +110,7 @@ class ImageCaptureController extends Controller
         );
 
 
-        Notification::route('mail', env('ADMIN_EMAIL'))
+        Notification::route('mail', config('custom.admin.email'))
             ->notify(new ActivityNotification($subject, $message));
     }
 }

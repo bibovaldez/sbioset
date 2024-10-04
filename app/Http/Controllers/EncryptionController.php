@@ -10,8 +10,8 @@ class EncryptionController extends Controller
 
     public function __construct()
     {
-        $this->key = base64_decode(env('KEY'));
-        $this->additionalData = hash('sha256', env('AD'), true);
+        $this->key = base64_decode(config('custom.encryption.key'));
+        $this->additionalData = hash('sha256', config('custom.encryption.additional_data'), true);
     }
 
     public function encryptData($data)
@@ -23,17 +23,14 @@ class EncryptionController extends Controller
     {
         // Generate nonce
         $nonce = random_bytes(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES);
-
         if (!extension_loaded('sodium')) {
             Log::error('Sodium extension is not loaded.');
             throw new \RuntimeException('Sodium extension is required for encryption.');
         }
-
         if (strlen($key) !== SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES) {
             Log::error('Invalid key length for XChaCha20-Poly1305.');
             throw new \InvalidArgumentException('Invalid key length.');
         }
-
         try {
             $encrypted = sodium_crypto_aead_xchacha20poly1305_ietf_encrypt(
                 $data,
@@ -41,18 +38,14 @@ class EncryptionController extends Controller
                 $nonce,
                 $key
             );
-
             if ($encrypted === false) {
                 Log::error('Encryption failed.');
                 return null;
             }
-
             // Prepend nonce to the encrypted data
             $encryptedWithNonce = $nonce . $encrypted;
-
             // Apply non-linear transformation
             $transformedCiphertext = $this->nonLinearTransform($encryptedWithNonce);
-
             return base64_encode($transformedCiphertext);
         } catch (\SodiumException $e) {
             Log::error('Sodium encryption failed: ' . $e->getMessage());
@@ -69,6 +62,11 @@ class EncryptionController extends Controller
             }
         }
     }
+
+
+
+
+
     private function nonLinearTransform(string $input): string
     {
         $output = '';

@@ -23,8 +23,8 @@ class ImageRecognitionController extends Controller
     protected function recognizeImage(UploadedFile $image)
     {
         $client = new Client();
-        $apiKey = env("ROBOFLOW_API_KEY");
-        $url = env('ROBOFLOW_API_URL');
+        $apiKey = config('services.roboflow.api_key');
+        $url = config('services.roboflow.api_url');
         $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
         $confidenceThreshold = 0.4;
         $response = $client->post($url, [

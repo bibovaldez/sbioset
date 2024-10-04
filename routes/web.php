@@ -8,7 +8,7 @@ use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 
 // Common middleware groups
-$securityMiddleware = ['check.not.blocked', 'http.redirect', 'xframe', 'secure.headers', 'hsts'];
+$securityMiddleware = ['check.not.blocked', 'http.redirect', 'secure.headers', 'hsts'];
 $authMiddleware = [
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -16,10 +16,11 @@ $authMiddleware = [
     'limit.sessions',
     'check.team.status',
     'honeypot',
+    'checkRole',
 ];
 
 // Security Routes
-Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMiddleware))->group(function () use ($authMiddleware) {
+Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
     Route::get('/', fn() => view('welcome'));
 
@@ -65,7 +66,6 @@ Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMi
     // User Routes
     Route::middleware($authMiddleware)->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
-        Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
     });
 
     // Team Routes

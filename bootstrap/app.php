@@ -15,24 +15,19 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // global middleware
-        // $middleware->use([
-        //     \App\Http\Middleware\LimitUserSessions::class,
-        //     \App\Http\Middleware\ValidateHost::class,
-        //     \App\Http\Middleware\XFrameOptions::class,
-        //     \App\Http\Middleware\HSTS::class,
-        //     \App\Http\Middleware\HttpRedirect::class,
-        // ]);
+        $middleware->use([
+            \App\Http\Middleware\SecureHeaders::class,
+            // \App\Http\Middleware\ValidateHost::class,
+            // \App\Http\Middleware\XFrameOptions::class,
+            // \App\Http\Middleware\HSTS::class,
+            // \App\Http\Middleware\HttpRedirect::class,
+        ]);
 
         $middleware->alias([
             'honeypot' => \Spatie\Honeypot\ProtectAgainstSpam::class,
             'checkRole' => App\Http\Middleware\CheckRole::class,
             'check.team.status' => \App\Http\Middleware\CheckTeamStatus::class,
-            'check.not.blocked' => \App\Http\Middleware\CheckNotBlocked::class,
-            'limit.sessions' => \App\Http\Middleware\LimitUserSessions::class,
-            'xframe' => \App\Http\Middleware\XFrameOptions::class,
-            'secure.headers' => \App\Http\Middleware\SecureHeaders::class,
-            'hsts' => \App\Http\Middleware\HSTS::class,
-            'http.redirect' => \App\Http\Middleware\HttpRedirect::class,
+            'limit.sessions' =>  \App\Http\Middleware\LimitUserSessions::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

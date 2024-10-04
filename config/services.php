@@ -39,5 +39,9 @@ return [
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
         'min_score' => env('RECAPTCHA_MIN_SCORE', .5),
     ],
+    'roboflow' => [
+        'api_key' => env('ROBOFLOW_API_KEY'),
+        'api_url' => env('ROBOFLOW_API_URL'),
+    ],
 
 ];

@@ -11,8 +11,8 @@ class DecryptionController extends Controller
 
     public function __construct()
     {
-        $this->key = base64_decode(env('KEY'));
-        $this->additionalData = hash('sha256', env('AD'), true);
+        $this->key = base64_decode(config('custom.encryption.key'));
+        $this->additionalData = hash('sha256', config('custom.encryption.additional_data'), true);
     }
 
     public function decryptData($ciphertext)
