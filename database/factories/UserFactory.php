@@ -28,9 +28,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => 'Admin',
-            'email' => env('ADMIN_EMAIL'),
+            'email' => config('custom.admin.email'),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make(env('ADMIN_PASSWORD')),
+            'password' => static::$password ??= Hash::make(config('custom.admin.password')),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'remember_token' => null,

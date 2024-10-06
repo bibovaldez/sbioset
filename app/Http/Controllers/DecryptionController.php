@@ -17,6 +17,7 @@ class DecryptionController extends Controller
 
     public function decryptData($ciphertext)
     {
+        dd(config('custom.encryption.key'));
         return $this->decrypt($ciphertext, $this->key, $this->additionalData);
     }
 
