@@ -24,26 +24,30 @@ Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMi
     Route::get('/', fn() => view('welcome'));
 
     // Logout other sessions
+    #region Logout Other Sessions
     Route::get('/logout-other-sessions/{token}', [LogoutController::class, 'logoutOtherSessions'])
         ->name('logout.other.sessions');
+    #endregion
 
-    // Authentication Routes
+    #region Authentication Routes
     if (config('fortify.views', true)) {
         Route::get(RoutePath::for('login', '/login'), [AuthenticatedSessionController::class, 'create'])
             ->middleware(['guest:' . config('fortify.guard')])
             ->name('login');
     }
-
     Route::post(RoutePath::for('login', '/login'), [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             'guest:' . config('fortify.guard'),
             config('fortify.limiters.login') ? 'throttle:' . config('fortify.limiters.login') : null,
             'honeypot',
         ]));
+    #endregion
 
-    Route::post(RoutePath::for('logout', '/logout'), [AuthenticatedSessionController::class, 'destroy'])
-        ->middleware([config('fortify.auth_middleware', 'auth') . ':' . config('fortify.guard')])
-        ->name('logout');
+    // Logout
+    #region Logout
+    Route::post(RoutePath::for('logout', '/logout'), [AuthenticatedSessionController::class, 'destroy'])->middleware([config('fortify.auth_middleware', 'auth') . ':' . config('fortify.guard')])->name('logout');
+    #endregion
+
 
     // Admin Routes
     Route::middleware(array_merge($authMiddleware, ['checkRole']))->group(function () {
@@ -90,12 +94,8 @@ Route::middleware(array_merge(config('fortify.middleware', ['web']), $securityMi
     }
 });
 
-// admin.dashboard-poultry
-// admin.dashboard-piggery
-// admin.dashboard-feeds
-// admin.dashboard-medicine
-
 
 Route::get('admin/dashboard-piggery', [DashboardController::class, 'dashboardPiggery'])->name('admin.dashboard-piggery');
 Route::get('admin/dashboard-feeds', [DashboardController::class, 'dashboardFeeds'])->name('admin.dashboard-feeds');
 Route::get('admin/dashboard-medicine', [DashboardController::class, 'dashboardMedicine'])->name('admin.dashboard-medicine');
+

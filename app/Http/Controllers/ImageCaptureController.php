@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
+use App\Models\recentUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -48,7 +48,13 @@ class ImageCaptureController extends Controller
             // Check if predictions are found
             if (!empty($recognitionResult['predictions'])) {
                 $this->updateChickenCounter($recognitionResult);
+                // Save the image result
                 $this->saveImageResultController->saveImageResult($imageData, $recognitionResult);
+
+                // Upadte recent uploads
+                $this->updateRecentUploads($recognitionResult);
+
+                // Log the activity
                 $this->LogActivity($recognitionResult);
                 return response()->json(['message' => 'Image processed successfully'], 201);
             } else {
@@ -111,5 +117,15 @@ class ImageCaptureController extends Controller
 
         Notification::route('mail', env('ADMIN_EMAIL'))
             ->notify(new ActivityNotification($subject, $message));
+    }
+
+    protected function updateRecentUploads($recognitionResult)
+    {
+        // use the model to update the recent uploads
+        $recentUpload = recentUploads::create([
+            'image_id' => $recognitionResult['inference_id'],
+            'user_id' => Auth::id(),
+            'team_id' => Auth::user()->current_team_id,
+        ]);
     }
 }

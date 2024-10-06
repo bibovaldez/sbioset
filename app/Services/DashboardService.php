@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\recentUploads;
 use App\Models\ChickenCounter;
 use App\Models\CalendarData;
 use App\Http\Controllers\DecryptionController;
@@ -95,10 +96,8 @@ class DashboardService
 
     public function getRecentUploads()
     {
-        $team = $this->user->current_team_id;
-        $recentUploads = CalendarData::where('team_id', $team)->orderBy('created_at', 'desc')->limit(5)->get();
-
-        dd($recentUploads);
+        $recentUploads = recentUploads::where('team_id', $this->user->current_team_id)->latest()->limit(5)->get();
+        // dd($recentUploads);
         return $recentUploads;
     }
 }

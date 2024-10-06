@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('recent_uploads', function (Blueprint $table) {
             $table->id();
+            $table->uuid('image_id'); // Changed to uuid
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('team_id');
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 

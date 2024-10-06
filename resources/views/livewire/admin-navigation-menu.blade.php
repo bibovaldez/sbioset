@@ -1,4 +1,5 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-full h-full">
+<nav x-data="{ open: false }"
+    class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-full h-full">
     <div>
         <div class="flex flex-col justify-center h-full">
             <div class="mb-5 flex justify-center items-center">
@@ -8,10 +9,13 @@
                     </a>
                 </div>
             </div>
-            <div class="flex flex-col space-y-4">
+            <div class="flex flex-col space-y-1">
                 <!-- Navigation Links -->
-                <x-nav-link href="{{ route('admin.dashboard-poultry') }}" :active="request()->routeIs('admin.dashboard-poultry')"
-                    class="w-full flex items-center px-12 py-2 text-xm font-medium 
+                <x-nav-link href="{{ route('admin.dashboard-poultry') }}" :active="request()->routeIs('admin.dashboard-poultry') ||
+                    request()->routeIs('admin.dashboard-piggery') ||
+                    request()->routeIs('admin.dashboard-feeds') ||
+                    request()->routeIs('admin.dashboard-medicine')"
+                    class="w-full flex items-center px-12 py-3 text-sm font-medium 
                      transition-colors duration-150 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +26,7 @@
                     <span>{{ __('Dashboard') }}</span>
                 </x-nav-link>
                 <x-nav-link href="{{ route('admin.calendar') }}" :active="request()->routeIs('admin.calendar')"
-                    class="flex items-center px-12 py-2 text-sm font-medium 
+                    class="flex items-center px-12 py-3 text-sm font-medium 
                      transition-colors duration-150 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -33,7 +37,7 @@
                     <span>{{ __('Calendar') }}</span>
                 </x-nav-link>
                 <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
-                    class="flex items-center px-12 py-2 text-sm font-medium 
+                    class="flex items-center px-12 py-3 text-sm font-medium 
                      transition-colors duration-150 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">

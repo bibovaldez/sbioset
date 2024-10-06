@@ -18,8 +18,7 @@ class DashboardController extends Controller
     {
         $dashboardData = $this->dashboardService->getDashboardData();
         $recentUploads = $this->dashboardService->getRecentUploads();
-            dd($recentUploads[0]);
-        return view('Admin.admin-dashboard-poultry', compact('dashboardData'));
+        return view('Admin.admin-dashboard-poultry', compact('dashboardData', 'recentUploads'));
     }
 
     public function dashboardPiggery(Request $request)
