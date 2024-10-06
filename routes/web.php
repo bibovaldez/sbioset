@@ -67,6 +67,9 @@ Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(fun
     Route::middleware($authMiddleware)->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
     });
+    Route::middleware($authMiddleware)->group(function () {
+        Route::post('/image/upload', [ImageCaptureController::class, 'upload'])->name('image.upload');
+    });
 
     // Team Routes
     if (Jetstream::hasTeamFeatures()) {
