@@ -17,7 +17,7 @@ $authMiddleware = [
     'honeypot',
     'checkRole',
 ];
-
+awd
 // Security Routes
 Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
