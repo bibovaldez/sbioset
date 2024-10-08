@@ -20,7 +20,7 @@ $authMiddleware = [
 // Security Routes
 Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
-    Route::get('/', fn() => view('welcome'));
+    Route::post('/', fn() => view('welcome'));
 
     // Logout other sessions
     Route::get('/logout-other-sessions/{token}', [LogoutController::class, 'logoutOtherSessions'])
