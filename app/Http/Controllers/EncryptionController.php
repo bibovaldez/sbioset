@@ -8,7 +8,7 @@ class EncryptionController extends Controller
     protected $key;
     protected $additionalData;
 
-    public function __construct()
+    private function __construct()
     {
         $this->key = base64_decode(config('custom.encryption.key'));
         $this->additionalData = hash('sha256', config('custom.encryption.additional_data'), true);
