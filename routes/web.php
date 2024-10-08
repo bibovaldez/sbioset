@@ -8,15 +8,7 @@ use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 
 // Common middleware groups
-$authMiddleware = [
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-    'limit.sessions',
-    'check.team.status',
-    'honeypot',
-    'checkRole',
-];
+
 // Security Routes
 Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
