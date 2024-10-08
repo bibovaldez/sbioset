@@ -11,6 +11,7 @@ use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 $authMiddleware = [
     'auth:sanctum',
     config('jetstream.auth_session'),
+    'verified',
     'limit.sessions',
     'check.team.status',
     'honeypot',
@@ -19,7 +20,7 @@ $authMiddleware = [
 // Security Routes
 Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
-
+    Route::get('/', fn() => view('welcome'));
     // Logout other sessions
     Route::get('/logout-other-sessions/{token}', [LogoutController::class, 'logoutOtherSessions'])
         ->name('logout.other.sessions');
@@ -53,6 +54,11 @@ Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(fun
         });
 
       
+    });
+       // Sub Admin Routes
+       Route::prefix('subadmin')->name('subadmin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
     });
 
     // User Routes
