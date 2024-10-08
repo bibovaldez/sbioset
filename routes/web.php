@@ -8,7 +8,6 @@ use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 
 // Common middleware groups
-$securityMiddleware = ['check.not.blocked', 'http.redirect', 'secure.headers', 'hsts'];
 $authMiddleware = [
     'auth:sanctum',
     config('jetstream.auth_session'),
