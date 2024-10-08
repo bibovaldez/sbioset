@@ -7,6 +7,7 @@
     <title>Bioset</title>
     <!-- Tab Icon svg icon.svg -->
     <link rel="icon" href="{{ asset('icon.ico') }}" type="image/x-icon" /> {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         /* Custom shapes and gradients */
         .custom-shape-divider {
