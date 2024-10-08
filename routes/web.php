@@ -7,20 +7,11 @@ use Laravel\Fortify\RoutePath;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Http\Controllers\Livewire\TeamController;
 
-// Common middleware groups
-$authMiddleware = [
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-    'limit.sessions',
-    'check.team.status',
-    'honeypot',
-    'checkRole',
-];
+
 // Security Routes
 Route::middleware(array_merge(config('fortify.middleware', ['web'])))->group(function () use ($authMiddleware) {
     // Landing page
-    Route::get('/', fn() => view('welcome'));
+    Route::post('/', fn() => view('welcome'));
     // Logout other sessions
     Route::get('/logout-other-sessions/{token}', [LogoutController::class, 'logoutOtherSessions'])
         ->name('logout.other.sessions');
